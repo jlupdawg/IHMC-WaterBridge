@@ -32,7 +32,12 @@
 #define LED           13
 
 
-
+int xAxis = 0;
+byte xPin = A0;
+int yAxis = 0;
+byte yPin = A1;
+byte buttonNumber = 0;
+byte buttonPin = 5;
 
 // Singleton instance of the radio driver
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
@@ -82,26 +87,44 @@ void setup()
   pinMode(LED, OUTPUT);
 
   Serial.print("RFM69 radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
+
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  pinMode(5, INPUT);
 }
 
 
 
 void loop() {
-  delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
+readJoystick();
+sendRadio();
+}
+void readJoystick()
+{
+  
+buttonNumber = digitalRead(buttonPin);
+xAxis = analogRead(xPin);
+yAxis = analogRead(yPin);
+
+}
+void sendRadio()
+{
+  //delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
   char radiopacket[30];
-  int firstNumber = 15;
-  int secondNumber = 51;
 
-  char first[8];
-  itoa(firstNumber, first, 10);
-  char second[8];
-  itoa(secondNumber, second, 10);
-
+  char yValue[8];
+  itoa(yAxis, yValue, 10);
+  char xValue[8];
+  itoa(xAxis, xValue, 10);
+  char button[8];
+  itoa(buttonNumber, button, 10);
   const char *delimiter = ",";
 
-  strcpy(radiopacket, first);
+  strcpy(radiopacket, button);
   strcat(radiopacket, delimiter);
-  strcat(radiopacket, second);
+  strcat(radiopacket, yValue);
+  strcat(radiopacket, delimiter);
+  strcat(radiopacket, xValue);
 
   itoa(packetnum++, radiopacket + 13, 10);
   Serial.print("Sending "); Serial.println(radiopacket);
@@ -110,4 +133,5 @@ void loop() {
   rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
   rf69.waitPacketSent();
 }
+
 
