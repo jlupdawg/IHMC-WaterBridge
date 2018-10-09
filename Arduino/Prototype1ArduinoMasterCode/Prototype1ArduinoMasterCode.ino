@@ -44,7 +44,7 @@ char *inputs[numberOfInputs];    // raw serial communication
 
 bool updateMotors = true;        // if inByte changes then update the motors
 
-int manualControllerArray[3] = {0, 0, 0};
+int manualControllerArray[4] = {0, 0, 0, 0};
 bool controllerMode = false;
 
 byte leftMotor = 8;

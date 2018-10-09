@@ -7,18 +7,19 @@ void manualController() {
     if (rf69.recv(buf, &len)) {
       if (!len) return;
       buf[len] = 0;
-      Serial.print("Received [");
-      Serial.print(len);
-      Serial.print("]: ");
-      Serial.println((char*)buf);
-      Serial.print("RSSI: ");
-      Serial.println(rf69.lastRssi(), DEC);
-
+      /*
+        Serial.print("Received [");
+        Serial.print(len);
+        Serial.print("]: ");
+        Serial.println((char*)buf);
+        Serial.print("RSSI: ");
+        Serial.println(rf69.lastRssi(), DEC);
+      */
       const int bufferSize = 5;
       int arr[bufferSize];
 
       char *p = strtok((char*)buf, ",");
-      byte index = 1;
+      byte index = 0;
 
       while (p != nullptr && index < bufferSize) {
         arr[index++] = atoi(p);
@@ -36,7 +37,7 @@ void manualController() {
       Serial.println("Receive failed");
     }
   }
-  if(manualControllerArray == 1)
+  if (manualControllerArray[1] == 1)
   {
     controllerMode = true;
   }

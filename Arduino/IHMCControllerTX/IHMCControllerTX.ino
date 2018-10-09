@@ -37,7 +37,8 @@ byte xPin = A0;
 int yAxis = 0;
 byte yPin = A1;
 byte buttonNumber = 0;
-byte buttonPin = 5;
+byte buttonPin = 7;
+byte nodeNumber = 1;
 
 // Singleton instance of the radio driver
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
@@ -88,23 +89,23 @@ void setup()
 
   Serial.print("RFM69 radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
 
-  pinMode(A0, INPUT);
-  pinMode(A1, INPUT);
-  pinMode(5, INPUT);
+  pinMode(xPin, INPUT);
+  pinMode(yPin, INPUT);
+  pinMode(buttonPin, INPUT);
 }
 
 
 
 void loop() {
-readJoystick();
-sendRadio();
+  readJoystick();
+  sendRadio();
 }
 void readJoystick()
 {
-  
-buttonNumber = digitalRead(buttonPin);
-xAxis = analogRead(xPin);
-yAxis = analogRead(yPin);
+
+  buttonNumber = !digitalRead(buttonPin);
+  xAxis = analogRead(xPin);
+  yAxis = analogRead(yPin);
 
 }
 void sendRadio()
@@ -112,15 +113,19 @@ void sendRadio()
   //delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
   char radiopacket[30];
 
-  char yValue[8];
-  itoa(yAxis, yValue, 10);
+  char node[8];
+  itoa(nodeNumber, node, 10);
   char xValue[8];
   itoa(xAxis, xValue, 10);
+  char yValue[8];
+  itoa(yAxis, yValue, 10);
   char button[8];
   itoa(buttonNumber, button, 10);
   const char *delimiter = ",";
 
-  strcpy(radiopacket, button);
+  strcpy(radiopacket, node);
+  strcat(radiopacket, delimiter);
+  strcat(radiopacket, button);
   strcat(radiopacket, delimiter);
   strcat(radiopacket, yValue);
   strcat(radiopacket, delimiter);
