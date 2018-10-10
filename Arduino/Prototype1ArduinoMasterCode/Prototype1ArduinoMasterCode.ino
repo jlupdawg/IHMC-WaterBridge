@@ -40,7 +40,7 @@ RH_RF69 rf69(RFM69_CS, RFM69_INT);
 /************************************ Serial Communication **************************************/
 char inputString[50];            // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
-const int numberOfInputs = 2;    // number of inputs through serial communication seperated by comma
+const int numberOfInputs = 3;    // number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
 int inByte[numberOfInputs][2];   // decoded serial communication 2D array for comparison of previous values
 char *inputs[numberOfInputs];    // raw serial communication
 /************************************************************************************************/
@@ -48,8 +48,16 @@ char *inputs[numberOfInputs];    // raw serial communication
 
 /************************************ Manual Controller *****************************************/
 
-int manualControllerArray[4] = {0, 0, 0, 0};
+int manualControllerArray[4] = {0, 0, 0, 0};  //node, button, xValue, yValue
 bool controllerMode = false;
+
+/************************************************************************************************/
+
+/***************************************** Docking **********************************************/
+
+int dockingArray[4] = {0, 0, 0, 0}; //node, inRange (high / low), leftSonar, rightSonar
+int dockingStatus = 0;
+bool dockingMode = false;
 
 /************************************************************************************************/
 
@@ -101,20 +109,27 @@ void setup() {
 
 void loop() {
 
-  while (controllerMode == false)  //must reset the master board after putting the boat in controllerMode. This is intentional
+  if ((controllerMode == false) && (dockingMode == false))  //must reset the master board after putting the boat in controllerMode. This is intentional
   {
+    //Serial.println("normal mode");
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();                  // check incoming serial communication
     printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
     if (updateMotors)
     {
-      setMotors();                 // set the motors with pwm pin values
+      setMotors_Serial();                 // set the motors with pwm pin values
     }
   }
-  while (controllerMode == true)   //Only perform tasks necessary to manually control the boat
+  else if (controllerMode == true)   //Only perform tasks necessary to manually control the boat
   {
     incomingRadio();
     setMotors_Controller();
+  }
+  else if (dockingMode == true)
+  {
+    incomingRadio();
+    dock();
+    setMotors_dock();
   }
 
 }

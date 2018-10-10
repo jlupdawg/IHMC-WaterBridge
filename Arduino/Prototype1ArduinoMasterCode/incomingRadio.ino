@@ -25,11 +25,22 @@ void incomingRadio() {
         arr[index++] = atoi(p);                    // in the temporary array change your token to an integer and save it
         p = strtok(NULL, ",");                     // if p = the delimiter it is null and it is skipped
       }
-
-      for (int i = 0; i < index; i++)              // move values from arr to the Manual Controller Array
+      Serial.println(arr[0]);
+      if (arr[0] = 1)
       {
-        manualControllerArray[i] = arr[i];
-        //Serial.println(arr[i]);
+        for (int i = 0; i < index; i++)              // move values from arr to the Manual Controller Array
+        {
+          manualControllerArray[i] = arr[i];
+          //Serial.println(arr[i]);
+        }
+      }
+      else if (arr[0] = 2)
+      {
+        for (int i = 0; i < index; i++)              // move values from arr to the Manual Controller Array
+        {
+          dockingArray[i] = arr[i];
+          //Serial.println(arr[i]);
+        }
       }
     }
     else

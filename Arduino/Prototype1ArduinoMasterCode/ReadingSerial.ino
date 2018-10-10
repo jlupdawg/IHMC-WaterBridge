@@ -18,6 +18,11 @@ void readSerial()
       ptr = strtok(NULL, ",");                                                                //progress to next token
     }
   }
+
+  if (inByte[0][1] == 1)
+  {
+    dockingMode = true;
+  }
 }
 
 void printInByte()

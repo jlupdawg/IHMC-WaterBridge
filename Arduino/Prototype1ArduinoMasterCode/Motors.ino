@@ -1,13 +1,13 @@
-void setMotors()                                                    //sets the motors straight from the incoming serial data
+void setMotors_Serial()                                                    //sets the motors straight from the incoming serial data
 {
-  int leftMotorValue = map(inByte[0][1], -100 , 100, -255, 255);      //maps a value given in percent to an analog value
-  int rightMotorValue = map(inByte[1][1], -100 , 100, -255, 255);     //maps a value given in percent to an analog value
+  int leftMotorValue = map(inByte[1][1], -100 , 100, -255, 255);      //maps a value given in percent to an analog value
+  int rightMotorValue = map(inByte[2][1], -100 , 100, -255, 255);     //maps a value given in percent to an analog value
 
   analogWrite(leftMotor, leftMotorValue);                            //provides a pwm value to the motors
   analogWrite(rightMotor, rightMotorValue);
-
-
 }
+
+
 void setMotors_Controller()
 {
   int leftMotorValue = 0;
@@ -38,5 +38,10 @@ void setMotors_Controller()
   
   analogWrite(leftMotor, leftMotorValue);
   analogWrite(rightMotor, rightMotorValue);
+
+}
+
+void setMotors_dock()                                                    
+{
 
 }
