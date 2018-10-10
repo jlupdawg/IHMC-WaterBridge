@@ -19,6 +19,7 @@ void readSerial()
     }
   }
 }
+
 void printInByte()
 {
   updateMotors = false;
@@ -29,6 +30,7 @@ void printInByte()
       updateMotors = true;
     }
   }
+
 
   if (updateMotors)
   {

@@ -1,3 +1,4 @@
+/****************************** Radio Setup ****************************************/
 /* Arduino Uno
     Vin 3.3V
     GND GND
@@ -21,7 +22,7 @@
 #include <SPI.h>
 #include <RH_RF69.h>
 
-/************ Radio Setup ***************/
+
 
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF69_FREQ 434
@@ -34,25 +35,36 @@
 // Singleton instance of the radio driver
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
 
+/************************************************************************************************/
 
-
+/************************************ Serial Communication **************************************/
 char inputString[50];            // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
 const int numberOfInputs = 2;    // number of inputs through serial communication seperated by comma
 int inByte[numberOfInputs][2];   // decoded serial communication 2D array for comparison of previous values
 char *inputs[numberOfInputs];    // raw serial communication
+/************************************************************************************************/
 
-bool updateMotors = true;        // if inByte changes then update the motors
+
+/************************************ Manual Controller *****************************************/
 
 int manualControllerArray[4] = {0, 0, 0, 0};
 bool controllerMode = false;
 
+/************************************************************************************************/
+
+
+/*************************************** Motor Setup ********************************************/
+
 byte leftMotor = 8;
 byte rightMotor = 9;
+bool updateMotors = true;        // if inByte changes then update the motors
 
+
+/************************************************************************************************/
 void setup() {
   Serial.begin(115200);
-
+  /************************************* Radio Setup ********************************************/
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
   Serial.println("Feather RFM69 RX Test!");
@@ -82,23 +94,26 @@ void setup() {
                   };
   rf69.setEncryptionKey(key);
   Serial.print("RFM69 radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
+
+
+  /********************************************************************************************************/
 }
 
 void loop() {
 
-  while (controllerMode == false)
+  while (controllerMode == false)  //must reset the master board after putting the boat in controllerMode. This is intentional
   {
-    manualController();
+    incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();                  // check incoming serial communication
     printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
     if (updateMotors)
     {
-      setMotors();                   // set the motors with pwm pin values
+      setMotors();                 // set the motors with pwm pin values
     }
   }
-  while (controllerMode == true)
+  while (controllerMode == true)   //Only perform tasks necessary to manually control the boat
   {
-    manualController();
+    incomingRadio();
     setMotors_Controller();
   }
 
