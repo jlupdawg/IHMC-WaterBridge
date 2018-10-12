@@ -4,21 +4,24 @@ void readSerial()
   int i;
   char *ptr;
 
-  if (Serial.available() > 0) {                                                               //if serial coms are available then read them
+  if (Serial.available()) {                                                               //if serial coms are available then read them
     charsRead = Serial.readBytesUntil('\n', inputString, sizeof(inputString) - 1);            //read the serial com until new line
     inputString[charsRead] = '\0';         
     i = 0;
-    ptr = strtok(inputString, ",");                                                           // split com string into tokens every ','
+    ptr = strtok(inputString, ",");    // split com string into tokens every ','
+
     while (ptr) {
-      inputs[i] = ptr;                                                                        //const char array = token
-      inByte[i][0] = atoi(inputs[i]);                                                         //const char array to int array
+      inputs[i] = ptr;  
+      inByte[i][0] = atoi(inputs[i]);
+      //const char array = token
+      //const char array to int array
       //Serial.print(pad[i]);
       //Serial.print("   ");
       i++;
       ptr = strtok(NULL, ",");                                                                //progress to next token
     }
-  }
 
+  }
   if (inByte[0][1] == 1)
   {
     dockingMode = true;
@@ -42,13 +45,16 @@ void printInByte()
     for( int i = 0; i <= numberOfInputs - 1; i++)
     {
       inByte[i][1] = inByte[i][0];                            //updates input values
-      Serial.print("Input "); Serial.print(i + 1); Serial.print(" = "); Serial.println(inByte[i][1]);  //prints input data
+      //Serial.print("Input "); Serial.print(i + 1); Serial.print(" = "); Serial.println(inByte[i][1]);  //prints input data
     }
     Serial.println();
-    updateMotors = true;                                     //update the motors ONLY when new data arrives
   }
   else
   {
     updateMotors = false;                                   
   }
 }
+
+
+
+

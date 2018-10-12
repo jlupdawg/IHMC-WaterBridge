@@ -1,7 +1,10 @@
 void setMotors_Serial()                                                    //sets the motors straight from the incoming serial data
 {
-  int leftMotorValue = map(inByte[1][1], -100 , 100, -255, 255);      //maps a value given in percent to an analog value
-  int rightMotorValue = map(inByte[2][1], -100 , 100, -255, 255);     //maps a value given in percent to an analog value
+  leftMotorValue = map(inByte[numberOfInputs-2][1], -100 , 100, -255, 255);      //maps a value given in percent to an analog value
+  rightMotorValue = map(inByte[numberOfInputs-1][1], -100 , 100, -255, 255);     //maps a value given in percent to an analog value
+
+  leftMotorValue = constrain(leftMotorValue, -255, 255);
+  rightMotorValue = constrain(rightMotorValue, -255, 255);
 
   analogWrite(leftMotor, leftMotorValue);                            //provides a pwm value to the motors
   analogWrite(rightMotor, rightMotorValue);
@@ -10,8 +13,6 @@ void setMotors_Serial()                                                    //set
 
 void setMotors_Controller()
 {
-  int leftMotorValue = 0;
-  int rightMotorValue = 0;
   int threshold = 20;                                              //limit value for minimum controls to make sure that 0 = 0 without interference
   int xAxis = map(manualControllerArray[2], 0 , 1028, -128, 128);    //maps incoming  analog data from controller to a value between -128 and 128. The ICs may need to be changed based on power supply and consumption
   int yAxis = map(manualControllerArray[3], 0 , 1028, -128, 128);
@@ -35,7 +36,7 @@ void setMotors_Controller()
   //Serial.print("Left Motor = "); Serial.println(leftMotorValue);
   //Serial.print("Right Motor = "); Serial.println(rightMotorValue);
   //delay(500);
-  
+
   analogWrite(leftMotor, leftMotorValue);
   analogWrite(rightMotor, rightMotorValue);
 
@@ -45,3 +46,4 @@ void setMotors_dock()
 {
 
 }
+

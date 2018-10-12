@@ -23,7 +23,5 @@ void dock()
     dockingMode == false;
   }
 
-
-
 }
 
