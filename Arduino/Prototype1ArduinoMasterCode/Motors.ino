@@ -13,7 +13,7 @@ void setMotors_Controller()
   int leftMotorValue = 0;
   int rightMotorValue = 0;
   int threshold = 20;                                              //limit value for minimum controls to make sure that 0 = 0 without interference
-  int xAxis = map(manualControllerArray[2], 0 , 1028, -128, 128);    //maps incoming  analog data from controller to a value between -128 and 128. The ICs may need to be changed based on power supply and consumption
+  int xAxis = map(manualControllerArray[2], 0 , 1028, -128, 128);    //maps incoming  analog data from controller to a value between -128 and 128. The initial conditions (ICs) may need to be changed based on power supply and consumption
   int yAxis = map(manualControllerArray[3], 0 , 1028, -128, 128);
 
   if (yAxis > threshold || xAxis > threshold)                       //if the value is not in the threshold and is positive

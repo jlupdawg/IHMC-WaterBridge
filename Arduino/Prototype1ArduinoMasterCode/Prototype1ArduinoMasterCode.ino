@@ -19,7 +19,7 @@
     CS D4
     RSI D2
 */
-#include <SPI.h>
+#include <SPI.h> //Library for SPI serial communication
 #include <RH_RF69.h>
 
 
@@ -133,6 +133,3 @@ void loop() {
   }
 
 }
-
-
-
