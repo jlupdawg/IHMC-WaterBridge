@@ -40,7 +40,7 @@ RH_RF69 rf69(RFM69_CS, RFM69_INT);
 /************************************ Serial Communication **************************************/
 char inputString[50];            // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
-const int numberOfInputs = 2;    // number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
+const int numberOfInputs = 3;    // number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
 int inByte[numberOfInputs][2];   // decoded serial communication 2D array for comparison of previous values
 char *inputs[numberOfInputs];    // raw serial communication
 /************************************************************************************************/
@@ -151,6 +151,7 @@ void loop() {
   else if (dockingMode == true)
   {
     incomingRadio();
+    readSerial();
     dock();
     setMotors_dock();
   }
