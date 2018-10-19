@@ -35,13 +35,14 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <LiquidCrystal.h>
+#include <Servo.h>
 
 
 
 
-  #define RFM95_CS  4    // "E"
-  #define RFM95_RST 2   // "D"
-  #define RFM95_INT 3   // "B"
+#define RFM95_CS  4    // "E"
+#define RFM95_RST 2   // "D"
+#define RFM95_INT 3   // "B"
 
 
 // Change to 434.0 or other frequency, must match RX's freq!
@@ -87,11 +88,13 @@ LiquidCrystal lcd(30, 32, 22, 24, 26, 28);
 
 /*************************************** Motor Setup ********************************************/
 
-byte leftMotor = 8;
-byte rightMotor = 9;
+byte leftMotorPin = 8;
+byte rightMotorPin = 9;
 bool updateMotors = true;        // if inByte changes then update the motors
 int leftMotorValue = 0;
 int rightMotorValue = 0;
+Servo leftMotor;
+Servo rightMotor;
 
 
 /************************************************************************************************/
@@ -142,6 +145,11 @@ void setup() {
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
   /***************************************************************************************************************/
+  leftMotor.attach(leftMotorPin);
+  rightMotor.attach(leftMotorPin);
+  rightMotor.writeMicroseconds(1500);
+  rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
+  delay(1000); // delay to allow the ESC to recognize the stopped signal
 
 
 }

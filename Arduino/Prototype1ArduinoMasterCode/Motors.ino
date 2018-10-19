@@ -1,13 +1,40 @@
 void setMotors_Serial()                                                    //sets the motors straight from the incoming serial data
 {
-  leftMotorValue = map(inByte[numberOfInputs-2][1], -100 , 100, -255, 255);      //maps a value given in percent to an analog value
-  rightMotorValue = map(inByte[numberOfInputs-1][1], -100 , 100, -255, 255);     //maps a value given in percent to an analog value
+  leftMotorValue = map(inByte[numberOfInputs - 2][1], -100 , 100, -255, 255);    //maps a value given in percent to an analog value
+  rightMotorValue = map(inByte[numberOfInputs - 1][1], -100 , 100, -255, 255);   //maps a value given in percent to an analog value
 
-  leftMotorValue = constrain(leftMotorValue, -255, 255);
-  rightMotorValue = constrain(rightMotorValue, -255, 255);
+  if (leftMotorValue < 0)
+  {
+    leftMotorValue = map(leftMotorValue, -255, 0, 1100, 1500);
+  }
+  else if (leftMotorValue > 0)
+  {
+    leftMotorValue = map(leftMotorValue, 0, 255, 1500, 1900);
+  }
+  else
+  {
+    leftMotorValue = 1500;
+  }
 
-  analogWrite(leftMotor, leftMotorValue);                            //provides a pwm value to the motors
-  analogWrite(rightMotor, rightMotorValue);
+  if (rightMotorValue < 0)
+  {
+    rightMotorValue = map(rightMotorValue, -255, 0, 1100, 1500);
+  }
+  else if (rightMotorValue > 0)
+  {
+    rightMotorValue = map(rightMotorValue, 0, 255, 1500, 1900);
+  }
+  else
+  {
+    rightMotorValue = 1500;
+  }
+
+  
+  leftMotorValue = constrain(leftMotorValue, 1100, 1900);
+  rightMotorValue = constrain(rightMotorValue, 1100, 1900);
+
+  leftMotor.writeMicroseconds(leftMotorValue);
+  rightMotor.writeMicroseconds(rightMotorValue);
 }
 
 
@@ -33,16 +60,47 @@ void setMotors_Controller()
     rightMotorValue = 0;
   }
 
-  Serial.print("Left Motor = "); Serial.println(leftMotorValue);
-  Serial.print("Right Motor = "); Serial.println(rightMotorValue);
-  delay(100);
 
-  analogWrite(leftMotor, leftMotorValue);
-  analogWrite(rightMotor, rightMotorValue);
+
+  if (leftMotorValue < 0)
+  {
+    leftMotorValue = map(leftMotorValue, -255, 0, 1100, 1500);
+  }
+  else if (leftMotorValue > 0)
+  {
+    leftMotorValue = map(leftMotorValue, 0, 255, 1500, 1900);
+  }
+  else
+  {
+    leftMotorValue = 1500;
+  }
+
+  if (rightMotorValue < 0)
+  {
+    rightMotorValue = map(rightMotorValue, -255, 0, 1100, 1500);
+  }
+  else if (rightMotorValue > 0)
+  {
+    rightMotorValue = map(rightMotorValue, 0, 255, 1500, 1900);
+  }
+  else
+  {
+    rightMotorValue = 1500;
+  }
+  leftMotorValue = constrain(leftMotorValue, 1100, 1900);
+  rightMotorValue = constrain(rightMotorValue, 1100, 1900);
+
+  leftMotor.writeMicroseconds(leftMotorValue);
+  rightMotor.writeMicroseconds(rightMotorValue);
+
+  //Serial.print("Left Motor = "); Serial.println(leftMotorValue);
+  //Serial.print("Right Motor = "); Serial.println(rightMotorValue);
+  //delay(100);
 
 }
 
-void setMotors_dock()                                                    
+
+void setMotors_dock()
 {
 
 }
