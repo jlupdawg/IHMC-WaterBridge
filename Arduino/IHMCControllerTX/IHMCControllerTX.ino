@@ -19,17 +19,16 @@
     RSI D2
 */
 #include <SPI.h>
-#include <RH_RF69.h>
+#include <RH_RF95.h>
 
 /************ Radio Setup ***************/
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF69_FREQ 434
+#define RF95_FREQ 915.0
 
-#define RFM69_INT     3  // 
-#define RFM69_CS      4  //
-#define RFM69_RST     2  // "A"
-
+  #define RFM95_RST     3   // "A"
+  #define RFM95_CS      4   // "B"
+  #define RFM95_INT     2   //  next to A
 /****************************************************** Output Variables *************************************************/
 int xAxis = 0; //Joystick x axis value
 byte xPin = A0; // Joystick x axis input pin
@@ -40,8 +39,10 @@ byte buttonPin = 7;
 byte nodeNumber = 1; //defines which device is communicating with the master
 
 /************************************************************************************************************************/
+
+
 // Singleton instance of the radio driver
-RH_RF69 rf69(RFM69_CS, RFM69_INT);
+RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
@@ -50,51 +51,55 @@ void setup()
 {
   Serial.begin(115200);
   /************************************************* This bit is initalizing the radio *****************************/
-  pinMode(RFM69_RST, OUTPUT);
-  digitalWrite(RFM69_RST, LOW);
+    pinMode(RFM95_RST, OUTPUT);
+  digitalWrite(RFM95_RST, HIGH);
 
-  Serial.println("Feather RFM69 TX Test!");
-  Serial.println();
+  while (!Serial) {
+    delay(1);
+  }
+
+  delay(100);
+
+  Serial.println("Feather LoRa TX Test!");
 
   // manual reset
-  digitalWrite(RFM69_RST, HIGH);
+  digitalWrite(RFM95_RST, LOW);
   delay(10);
-  digitalWrite(RFM69_RST, LOW);
+  digitalWrite(RFM95_RST, HIGH);
   delay(10);
 
-  if (!rf69.init()) {
-    Serial.println("RFM69 radio init failed");
+  while (!rf95.init()) {
+    Serial.println("LoRa radio init failed");
     while (1);
   }
-  Serial.println("RFM69 radio init OK!");
-  // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM (for low power module)
-  // No encryption
-  if (!rf69.setFrequency(RF69_FREQ)) {
+  Serial.println("LoRa radio init OK!");
+
+  // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
+  if (!rf95.setFrequency(RF95_FREQ)) {
     Serial.println("setFrequency failed");
+    while (1);
   }
+  Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
+  
+  // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
-  // If you are using a high power RF69 eg RFM69HW, you *must* set a Tx power with the
-  // ishighpowermodule flag set like this:
-  //rf69.setTxPower(20, true);  // range from 14-20 for power, 2nd arg must be true for 69HCW
-
-  // The encryption key has to be the same as the one in the server
-  uint8_t key[] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-                    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
-                  };
-  rf69.setEncryptionKey(key);
-  Serial.print("RFM69 radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
+  // The default transmitter power is 13dBm, using PA_BOOST.
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
+  // you can set transmitter powers from 5 to 23 dBm:
+  rf95.setTxPower(23, false);
   /***************************************************************************************************************/
 
   pinMode(xPin, INPUT);
   pinMode(yPin, INPUT);
-  pinMode(buttonPin, INPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
 }
 
 
 
 void loop() {
   readJoystick();  //read Values from the joystick
-  sendRadio();     //send values over the radio
+  //sendRadio();     //send values over the radio
+  printingSerial();
 }
 void readJoystick()
 {
@@ -103,6 +108,17 @@ void readJoystick()
   xAxis = analogRead(xPin);
   yAxis = analogRead(yPin);
 
+  xAxis = map(xAxis, 0, 1023, 1023, 0);
+  yAxis = map(yAxis, 0, 1023, 1023, 0);
+
+}
+
+void printingSerial()
+{
+  Serial.print("X Axis"); Serial.println(xAxis);
+  Serial.print("Y Axis"); Serial.println(yAxis);
+  Serial.print("Button"); Serial.println(buttonNumber);
+  delay(1000);
 }
 void sendRadio()
 {
@@ -130,8 +146,8 @@ void sendRadio()
   itoa(packetnum++, radiopacket + 13, 10); // adds the number of packet being sent. I don't think we need this.
   Serial.print("Sending "); Serial.println(radiopacket); //serial prints what is being sent
 
-  rf69.send((uint8_t *)radiopacket, strlen(radiopacket));  //sends the unsigned 8 bit integer from ram at the address "radiopacket" and the length of the radiopacket
-  rf69.waitPacketSent(); //unsure what this does. I assume it creates a minimal delay for radio clarity.
+  rf95.send((uint8_t *)radiopacket, strlen(radiopacket));  //sends the unsigned 8 bit integer from ram at the address "radiopacket" and the length of the radiopacket
+  rf95.waitPacketSent(); //unsure what this does. I assume it creates a minimal delay for radio clarity.
 }
 
 

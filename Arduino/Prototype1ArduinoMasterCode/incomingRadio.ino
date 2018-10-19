@@ -1,12 +1,12 @@
 void incomingRadio() {
-  if(rf69.init())
+  if(rf95.init())
   {
-    if (rf69.available()) { // if there is a message
+    if (rf95.available()) { // if there is a message
 
-        uint8_t buf[RH_RF69_MAX_MESSAGE_LEN]; //create a buffer to add the message to
+        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]; //create a buffer to add the message to
       uint8_t len = sizeof(buf); //create a variable that is the length of buf
 
-        if (rf69.recv(buf, &len)) {
+        if (rf95.recv(buf, &len)) {
         if (!len) return;
         buf[len] = 0;
         /*
@@ -15,7 +15,7 @@ void incomingRadio() {
          Serial.print("]: ");
          Serial.println((char*)buf);
          Serial.print("RSSI: ");
-         Serial.println(rf69.lastRssi(), DEC);
+         Serial.println(rf95.lastRssi(), DEC);
          */
         const int bufferSize = 5;  // the max number of variables you can recieve + 1
         int arr[bufferSize];       // creates a temporary interger array
