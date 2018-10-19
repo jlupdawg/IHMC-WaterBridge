@@ -1,8 +1,7 @@
 void incomingRadio() {
-  if(rf95.init())
+    if (rf95.available())
   {
-    if (rf95.available()) { // if there is a message
-
+          //Serial.println("Radio Buffer");
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]; //create a buffer to add the message to
       uint8_t len = sizeof(buf); //create a variable that is the length of buf
 
@@ -27,7 +26,7 @@ void incomingRadio() {
           arr[index++] = atoi(p);                    // in the temporary array change your token to an integer and save it
           p = strtok(NULL, ",");                     // if p = the delimiter it is null and it is skipped
         }
-        Serial.println(arr[0]);
+        //Serial.println(arr[0]);
         if (arr[0] = 1)
         {
           for (int i = 0; i < index; i++)              // move values from arr to the Manual Controller Array
@@ -54,6 +53,5 @@ void incomingRadio() {
     {
       controllerMode = true;
     }
-  }
 }
 

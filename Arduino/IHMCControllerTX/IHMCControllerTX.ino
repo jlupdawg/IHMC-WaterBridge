@@ -1,23 +1,22 @@
 /* Arduino Uno
-    Vin 3.3V
-    GND GND
-    G0 D3
-    SCK D13
-    MISO D12
-    MOSI D11
-    CS D4
-    RSI D2
+ *  Radio
+      Vin 3.3V
+      GND GND
+      EN - NO PIN
+      G0 D3
+      SCK D13
+      MISO D12
+      MOSI D11
+      CS D4
+      RSI D2
+    Joystick
+      Vin 5V
+      GND GND
+      VRX A0
+      VRY A1
+      SW D7 //Must be defined as a PULLUP
 */
-/* Arduino Mega
-    Vin 3.3V
-    GND GND
-    G0 D3
-    SCK D52
-    MISO D50
-    MOSI D51
-    CS D4
-    RSI D2
-*/
+
 #include <SPI.h>
 #include <RH_RF95.h>
 
@@ -26,9 +25,10 @@
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 915.0
 
-  #define RFM95_RST     3   // "A"
-  #define RFM95_CS      4   // "B"
-  #define RFM95_INT     2   //  next to A
+// Singleton instance of the radio driver
+  #define RFM95_CS  4    // "E"
+  #define RFM95_RST 2   // "D"
+  #define RFM95_INT 3   // "B"
 /****************************************************** Output Variables *************************************************/
 int xAxis = 0; //Joystick x axis value
 byte xPin = A0; // Joystick x axis input pin
@@ -41,19 +41,18 @@ byte nodeNumber = 1; //defines which device is communicating with the master
 /************************************************************************************************************************/
 
 
+// Change to 434.0 or other frequency, must match RX's freq!
+#define RF95_FREQ 915.0
+
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-int16_t packetnum = 0;  // packet counter, we increment per xmission
-
-
-void setup()
+void setup() 
 {
-  Serial.begin(115200);
-  /************************************************* This bit is initalizing the radio *****************************/
-    pinMode(RFM95_RST, OUTPUT);
+  pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
+  Serial.begin(115200);
   while (!Serial) {
     delay(1);
   }
@@ -87,13 +86,14 @@ void setup()
   // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
-  /***************************************************************************************************************/
+
 
   pinMode(xPin, INPUT);
   pinMode(yPin, INPUT);
   pinMode(buttonPin, INPUT_PULLUP);
 }
 
+int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 
 void loop() {
@@ -111,6 +111,12 @@ void readJoystick()
   xAxis = map(xAxis, 0, 1023, 1023, 0);
   yAxis = map(yAxis, 0, 1023, 1023, 0);
 
+  xAxis = constrain(xAxis, 0, 1023);
+  yAxis = constrain(yAxis, 0, 1023);
+
+  //Serial.println(xAxis);
+  //Serial.println(yAxis);
+
 }
 
 void printingSerial()
@@ -123,15 +129,20 @@ void printingSerial()
 void sendRadio()
 {
   //delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
-  char radiopacket[30];    //creates a character array to send information over the radio. This is the only allowable format
+  char radiopacket[50];    //creates a character array to send information over the radio. This is the only allowable format
 
-  char node[8];           //creates a temporary character array
+  for(int i = 0; i < 51; i++)
+  {
+    radiopacket[i] = 0;
+  }
+
+  char node[10];           //creates a temporary character array
   itoa(nodeNumber, node, 10); //places the value "nodeNumber" into a character array
-  char xValue[8];
+  char xValue[10];
   itoa(xAxis, xValue, 10);
-  char yValue[8];
+  char yValue[10];
   itoa(yAxis, yValue, 10);
-  char button[8];
+  char button[10];
   itoa(buttonNumber, button, 10);
   const char *delimiter = ",";  // a delimiter is what defines the seperations in your string/array
 
@@ -143,7 +154,7 @@ void sendRadio()
   strcat(radiopacket, delimiter);
   strcat(radiopacket, xValue);
 
-  itoa(packetnum++, radiopacket + 13, 10); // adds the number of packet being sent. I don't think we need this.
+  //itoa(packetnum++, radiopacket + 13, 10); // adds the number of packet being sent. I don't think we need this.
   Serial.print("Sending "); Serial.println(radiopacket); //serial prints what is being sent
 
   rf95.send((uint8_t *)radiopacket, strlen(radiopacket));  //sends the unsigned 8 bit integer from ram at the address "radiopacket" and the length of the radiopacket

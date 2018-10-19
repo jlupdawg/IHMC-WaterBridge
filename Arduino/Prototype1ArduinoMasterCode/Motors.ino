@@ -14,8 +14,8 @@ void setMotors_Serial()                                                    //set
 void setMotors_Controller()
 {
   int threshold = 20;                                              //limit value for minimum controls to make sure that 0 = 0 without interference
-  int xAxis = map(manualControllerArray[2], 0 , 1028, -128, 128);    //maps incoming  analog data from controller to a value between -128 and 128. The ICs may need to be changed based on power supply and consumption
-  int yAxis = map(manualControllerArray[3], 0 , 1028, -128, 128);
+  int xAxis = map(manualControllerArray[2], 0 , 1028, -255, 255);    //maps incoming  analog data from controller to a value between -128 and 128. The ICs may need to be changed based on power supply and consumption
+  int yAxis = map(manualControllerArray[3], 0 , 1028, -255, 255);
 
   if (yAxis > threshold || xAxis > threshold)                       //if the value is not in the threshold and is positive
   {
@@ -24,8 +24,8 @@ void setMotors_Controller()
   }
   else if (yAxis < -threshold || xAxis < -threshold)                //if the value is not in the threshold and is negative
   {
-    leftMotorValue = yAxis - xAxis;
-    rightMotorValue = yAxis + xAxis;
+    leftMotorValue = yAxis + xAxis;
+    rightMotorValue = yAxis - xAxis;
   }
   else
   {
@@ -33,9 +33,9 @@ void setMotors_Controller()
     rightMotorValue = 0;
   }
 
-  //Serial.print("Left Motor = "); Serial.println(leftMotorValue);
-  //Serial.print("Right Motor = "); Serial.println(rightMotorValue);
-  //delay(500);
+  Serial.print("Left Motor = "); Serial.println(leftMotorValue);
+  Serial.print("Right Motor = "); Serial.println(rightMotorValue);
+  delay(100);
 
   analogWrite(leftMotor, leftMotorValue);
   analogWrite(rightMotor, rightMotorValue);
