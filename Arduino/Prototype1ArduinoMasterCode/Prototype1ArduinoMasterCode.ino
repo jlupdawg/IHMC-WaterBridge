@@ -93,8 +93,20 @@ byte rightMotorPin = 9;
 bool updateMotors = true;        // if inByte changes then update the motors
 int leftMotorValue = 0;
 int rightMotorValue = 0;
+int maxSpeed = 1900;
+int minSpeed = 1100;
+int stopSpeed = 1500;
 Servo leftMotor;
 Servo rightMotor;
+
+
+/************************************************************************************************/
+
+
+/*************************************** Motor Setup ********************************************/
+
+unsigned long currentMillis = millis();
+unsigned long previousMillis = 0;
 
 
 /************************************************************************************************/
@@ -146,7 +158,7 @@ void setup() {
   rf95.setTxPower(23, false);
   /***************************************************************************************************************/
   leftMotor.attach(leftMotorPin);
-  rightMotor.attach(leftMotorPin);
+  rightMotor.attach(rightMotorPin);
   rightMotor.writeMicroseconds(1500);
   rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
   delay(1000); // delay to allow the ESC to recognize the stopped signal
@@ -156,12 +168,12 @@ void setup() {
 
 void loop() {
   //Serial.println("Begin");
-
+/*
   if ((controllerMode == false) && (dockingMode == false))  //must reset the master board after putting the boat in controllerMode. This is intentional
   {
     //Serial.println("normal mode");
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-    readSerial();                  // check incoming serial communication
+    //readSerial();                  // check incoming serial communication
     printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
     if (updateMotors)
     {
@@ -182,7 +194,9 @@ void loop() {
     dock();
     setMotors_dock();
   }
-
+*/
+incomingRadio();
+setMotors_Controller();
 }
 
 
