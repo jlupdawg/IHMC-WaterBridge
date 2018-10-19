@@ -98,8 +98,8 @@ void setup()
 
 void loop() {
   readJoystick();  //read Values from the joystick
-  //sendRadio();     //send values over the radio
-  printingSerial();
+  sendRadio();     //send values over the radio
+  //printingSerial();
 }
 void readJoystick()
 {
