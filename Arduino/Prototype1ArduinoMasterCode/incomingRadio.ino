@@ -9,7 +9,7 @@ void incomingRadio() {
     if(rf95.recv(buf, &len))
     {
       receivedChars = buf;
-      Serial.println((char*)buf);
+      //Serial.println((char*)buf);
     }
     else
     {
@@ -41,7 +41,7 @@ void parseData() {
     for (int i = 0; i < 4; i++)              // move values from arr to the Manual Controller Array
     {
       manualControllerArray[i] = arr[i];
-      Serial.println(arr[i]);
+      //Serial.println(arr[i]);
     }
   }
 

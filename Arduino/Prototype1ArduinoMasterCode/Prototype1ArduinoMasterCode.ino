@@ -38,6 +38,7 @@ char *receivedChars;
 char tempChars[numChars];        // temporary array for use when parsing
 int arr[4]; //radio must receive 4 values
 bool newData = false;
+int counter = 0;
 
 #include <SPI.h>
 #include <RH_RF95.h>
@@ -221,16 +222,15 @@ void loop() {
     }
     incomingRadio();
     //setMotors_Controller();
-  
+  */
   incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-   */
+   
   if (newData == true) {
     strcpy(tempChars, receivedChars);
     parseData();
   }
   newData = false;
-  //setMotors_Controller();
- 
+  setMotors_Controller();
 }
 
 
