@@ -106,6 +106,9 @@ int leftMotorValue = 0;
 int rightMotorValue = 0;
 Servo leftMotor;
 Servo rightMotor;
+int minSpeed = 1100;
+int stopSpeed = 1500;
+int maxSpeed = 1900;
 
 
 /************************************************************************************************/
@@ -186,7 +189,7 @@ void loop() {
   {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     setMotors_Controller();
-    Serial.println("Controller Mode");
+    //Serial.println("Controller Mode");
   }
   else if (dockingMode == true)
   {

@@ -167,8 +167,7 @@ void sendRadio()
   strcat(radiopacket, yValue);
   strcat(radiopacket, delimiter);
   strcat(radiopacket, xValue);
-  strcat(radiopacket, delimiter);
-  strcat(radiopacket, bufferVal);
+
 
   //itoa(packetnum++, radiopacket + 13, 10); // adds the number of packet being sent. I don't think we need this.
   Serial.print("Sending "); Serial.println(radiopacket); //serial prints what is being sent
