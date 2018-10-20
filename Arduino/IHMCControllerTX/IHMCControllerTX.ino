@@ -1,5 +1,5 @@
 /* Arduino Uno
- *  Radio
+    Radio
       Vin 3.3V
       GND GND
       EN - NO PIN
@@ -26,9 +26,9 @@
 #define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
-  #define RFM95_CS  4    // "E"
-  #define RFM95_RST 2   // "D"
-  #define RFM95_INT 3   // "B"
+#define RFM95_CS  4    // "E"
+#define RFM95_RST 2   // "D"
+#define RFM95_INT 3   // "B"
 /****************************************************** Output Variables *************************************************/
 int xAxis = 0; //Joystick x axis value
 byte xPin = A0; // Joystick x axis input pin
@@ -47,7 +47,7 @@ byte nodeNumber = 1; //defines which device is communicating with the master
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-void setup() 
+void setup()
 {
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
@@ -79,11 +79,11 @@ void setup()
     while (1);
   }
   Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
-  
+
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
   // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
 
@@ -100,6 +100,7 @@ void loop() {
   readJoystick();  //read Values from the joystick
   sendRadio();     //send values over the radio
   //printingSerial();
+  delay(100);
 }
 void readJoystick()
 {
@@ -131,7 +132,7 @@ void sendRadio()
   //delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
   char radiopacket[50];    //creates a character array to send information over the radio. This is the only allowable format
 
-  for(int i = 0; i < 51; i++)
+  for (int i = 0; i < 51; i++)
   {
     radiopacket[i] = 0;
   }
@@ -145,6 +146,9 @@ void sendRadio()
   char button[10];
   itoa(buttonNumber, button, 10);
   const char *delimiter = ",";  // a delimiter is what defines the seperations in your string/array
+  char bufferVal[10];
+  int bufferValue = 0;
+  itoa(bufferValue, bufferVal, 10);
 
   strcpy(radiopacket, node);    // copies the character array "node" into radiopacket
   strcat(radiopacket, delimiter); // concatenate (tacks on the end) the delimiter character
@@ -153,6 +157,8 @@ void sendRadio()
   strcat(radiopacket, yValue);
   strcat(radiopacket, delimiter);
   strcat(radiopacket, xValue);
+  strcat(radiopacket, delimiter);
+  strcat(radiopacket, bufferVal);
 
   //itoa(packetnum++, radiopacket + 13, 10); // adds the number of packet being sent. I don't think we need this.
   Serial.print("Sending "); Serial.println(radiopacket); //serial prints what is being sent

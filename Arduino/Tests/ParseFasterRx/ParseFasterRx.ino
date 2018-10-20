@@ -3,8 +3,6 @@
 
 const byte numChars = 32;
 char *receivedChars;
-
-
 char tempChars[numChars];        // temporary array for use when parsing
 
 // variables to hold the parsed data
@@ -119,7 +117,8 @@ void recvRadio()
 void parseData() {      // split the data into its parts
 
   char * strtokIndx; // this is used by strtok() as an index
-
+while(strtokIndx != '!')
+{
   strtokIndx = strtok(tempChars, ",");     // get the first part - the string
   messageFromPC = atoi(strtokIndx);
   strtokIndx = strtok(NULL, ","); // this continues where the previous call left off
@@ -130,7 +129,7 @@ void parseData() {      // split the data into its parts
 
   strtokIndx = strtok(NULL, ",");
   integerFromPCC = atof(strtokIndx);     // convert this part to a float
-
+}
 }
 
 //============
