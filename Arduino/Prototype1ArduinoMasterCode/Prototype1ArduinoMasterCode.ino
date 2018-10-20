@@ -90,6 +90,13 @@ int dockingStatus = 0;
 bool dockingMode = false;
 
 /************************************************************************************************/
+/***************************************** Logging **********************************************/
+
+unsigned long currentMillis = millis();
+unsigned long previousMillis = 0;
+int timerThreshold = 1000;
+
+/************************************************************************************************/
 
 /***************************************** LCD Write ********************************************/
 
@@ -184,12 +191,14 @@ void loop() {
       //writeLCD_Motors();
       //writeLCD(inByte[0][1], inByte[1][1]);
     }
+    loggingData("Normal");
   }
   else if (controllerMode == true)   //Only perform tasks necessary to manually control the boat
   {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     setMotors_Controller();
     //Serial.println("Controller Mode");
+    loggingData("Controller Mode");
   }
   else if (dockingMode == true)
   {
@@ -197,11 +206,8 @@ void loop() {
     readSerial();
     dock();
     setMotors_dock();
+    loggingData("Docking Mode");
   }
-  incomingRadio();
-  //setMotors_Controller();
-
-
 
 }
 

@@ -71,9 +71,6 @@ void incomingRadio() {
     controllerMode = true;
   }
 
-  if (manualControllerArray[1] == 1)
-  {
-    controllerMode = true;
-  }
+
 }
 
