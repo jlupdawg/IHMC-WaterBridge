@@ -98,13 +98,18 @@ int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 void loop() {
   readJoystick();  //read Values from the joystick
-  sendRadio();     //send values over the radio
   //printingSerial();
   delay(100);
 }
 void readJoystick()
 {
+  int tempxAxis;
+  int tempButton;
+  int tempyAxis;
 
+  tempxAxis = xAxis;
+  tempyAxis = yAxis;
+  tempButton = buttonNumber;
   buttonNumber = !digitalRead(buttonPin);  //invert the input from the joystick. It MUST have a pullup resistor. 330 Ohm works well.
   xAxis = analogRead(xPin);
   yAxis = analogRead(yPin);
@@ -114,6 +119,11 @@ void readJoystick()
 
   xAxis = constrain(xAxis, 0, 1023);
   yAxis = constrain(yAxis, 0, 1023);
+
+  if((xAxis != tempxAxis) || (yAxis != tempyAxis) || (buttonNumber != tempButton))
+  {
+    sendRadio();
+  }
 
   //Serial.println(xAxis);
   //Serial.println(yAxis);

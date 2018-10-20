@@ -38,29 +38,30 @@ char *receivedChars;
 char tempChars[numChars];        // temporary array for use when parsing
 int arr[4]; //radio must receive 4 values
 bool newData = false;
-int counter = 0;
 
-#include <SPI.h>
-#include <RH_RF95.h>
 #include <LiquidCrystal.h>
 #include <Servo.h>
 
 
 
 
+#include <SPI.h>
+#include <RH_RF95.h>
+
+/************ Radio Setup ***************/
+
+// Change to 434.0 or other frequency, must match RX's freq!
+
+// Singleton instance of the radio driver
 #define RFM95_CS  4    // "E"
 #define RFM95_RST 2   // "D"
 #define RFM95_INT 3   // "B"
 
 
-// Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
-
-
-
 /************************************************************************************************/
 
 /************************************ Serial Communication **************************************/
@@ -121,14 +122,13 @@ void setup() {
   digitalWrite(RFM95_RST, HIGH);
 
   Serial.begin(115200);
-  
   while (!Serial) {
     delay(1);
   }
+
   delay(100);
 
-  //Serial.println("Feather LoRa RX Test!");
-  //Serial.flush();
+  Serial.println("Feather LoRa TX Test!");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -166,26 +166,13 @@ void setup() {
 }
 
 void loop() {
-<<<<<<< HEAD
-  /*
-    //Serial.println("Begin");
-    if ((controllerMode == false) && (dockingMode == false))  //must reset the master board after putting the boat in controllerMode. This is intentional
-    {
-    //Serial.println("normal mode");
-    incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-    if (newData == true) {
-      strcpy(tempChars, receivedChars);
-      parseData();
-    }
-    newData = false;
-=======
+
   //Serial.println("Begin");
 
   if ((controllerMode == false) && (dockingMode == false))  //must reset the master board after putting the boat in controllerMode. This is intentional
   {
     //Serial.println("normal mode");
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
->>>>>>> parent of ee904d3... Fixed Controller Code
     readSerial();                  // check incoming serial communication
     printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
     if (updateMotors)
@@ -194,44 +181,25 @@ void loop() {
       //writeLCD_Motors();
       //writeLCD(inByte[0][1], inByte[1][1]);
     }
-    }
-    else if (controllerMode == true)   //Only perform tasks necessary to manually control the boat
-    {
+  }
+  else if (controllerMode == true)   //Only perform tasks necessary to manually control the boat
+  {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-    if (newData == true) {
-      strcpy(tempChars, receivedChars);
-      parseData();
-    }
-    newData = false;
     setMotors_Controller();
     Serial.println("Controller Mode");
-    }
-    else if (dockingMode == true)
-    {
+  }
+  else if (dockingMode == true)
+  {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-    if (newData == true) {
-      strcpy(tempChars, receivedChars);
-      parseData();
-    }
     readSerial();
     dock();
     setMotors_dock();
-    }
-    incomingRadio();
-    //setMotors_Controller();
-  */
-  incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-   
-  if (newData == true) {
-    strcpy(tempChars, receivedChars);
-    parseData();
   }
-<<<<<<< HEAD
-  newData = false;
-  setMotors_Controller();
-=======
+  incomingRadio();
+  //setMotors_Controller();
 
->>>>>>> parent of ee904d3... Fixed Controller Code
+
+
 }
 
 

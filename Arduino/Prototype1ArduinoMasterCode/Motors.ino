@@ -94,7 +94,6 @@ void setMotors_Controller()
   rightMotor.writeMicroseconds(rightMotorValue);
   Serial.print("Left Motor = "); Serial.println(leftMotorValue);
   Serial.print("Right Motor = "); Serial.println(rightMotorValue);
-  Serial.println(counter++);
   //delay(100);
 
 }
