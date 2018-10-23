@@ -167,8 +167,8 @@ void setup() {
   rf95.setTxPower(23, false);
   /***************************************************************************************************************/
   leftMotor.attach(leftMotorPin);
-  rightMotor.attach(leftMotorPin);
-  rightMotor.writeMicroseconds(1500);
+  rightMotor.attach(rightMotorPin);
+  leftMotor.writeMicroseconds(1500);
   rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
   delay(1000); // delay to allow the ESC to recognize the stopped signal
 
