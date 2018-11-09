@@ -1,3 +1,4 @@
+@@ -1,136 +0,0 @@
 /* Arduino Uno
     Radio
       Vin 3.3V
@@ -29,16 +30,6 @@
 #define RFM95_CS  4    // "E"
 #define RFM95_RST 2   // "D"
 #define RFM95_INT 3   // "B"
-/****************************************************** Output Variables *************************************************/
-int xAxis = 0; //Joystick x axis value
-byte xPin = A0; // Joystick x axis input pin
-int yAxis = 0;
-byte yPin = A1;
-byte buttonNumber = 0;
-byte buttonPin = 7;
-byte nodeNumber = 1; //defines which device is communicating with the master
-
-/************************************************************************************************************************/
 
 
 // Change to 434.0 or other frequency, must match RX's freq!
@@ -86,57 +77,16 @@ void setup()
   // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
-
-
-  pinMode(xPin, INPUT);
-  pinMode(yPin, INPUT);
-  pinMode(buttonPin, INPUT_PULLUP);
 }
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 
 void loop() {
-  readJoystick();  //read Values from the joystick
-  //printingSerial();
-  delay(100);
-}
-void readJoystick()
-{
-  int tempxAxis;
-  int tempButton;
-  int tempyAxis;
-
-  tempxAxis = xAxis;
-  tempyAxis = yAxis;
-  tempButton = buttonNumber;
-  buttonNumber = !digitalRead(buttonPin);  //invert the input from the joystick. It MUST have a pullup resistor. 330 Ohm works well.
-  xAxis = analogRead(xPin);
-  yAxis = analogRead(yPin);
-
-  xAxis = map(xAxis, 0, 1023, 1023, 0);
-  yAxis = map(yAxis, 0, 1023, 1023, 0);
-
-  xAxis = constrain(xAxis, 0, 1023);
-  yAxis = constrain(yAxis, 0, 1023);
-
-  if((xAxis != tempxAxis) || (yAxis != tempyAxis) || (buttonNumber != tempButton))
-  {
-    sendRadio();
-  }
-
-  //Serial.println(xAxis);
-  //Serial.println(yAxis);
-
+  sendRadio();     //send values over the radio
 }
 
-void printingSerial()
-{
-  Serial.print("X Axis"); Serial.println(xAxis);
-  Serial.print("Y Axis"); Serial.println(yAxis);
-  Serial.print("Button"); Serial.println(buttonNumber);
-  delay(1000);
-}
+
 void sendRadio()
 {
   //delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
@@ -146,27 +96,35 @@ void sendRadio()
   {
     radiopacket[i] = 0;
   }
+  int theIntPrime = 42;
+  int theIntA = 12;
+  int theIntB = 72;
+  int theIntC = 96;
 
-  char node[10];           //creates a temporary character array
-  itoa(nodeNumber, node, 10); //places the value "nodeNumber" into a character array
-  char xValue[10];
-  itoa(xAxis, xValue, 10);
-  char yValue[10];
-  itoa(yAxis, yValue, 10);
-  char button[10];
-  itoa(buttonNumber, button, 10);
+  char theString[] = "HelloWorld";
+  char intNodePrime[10];
+  itoa(theIntPrime, intNodePrime, 10); //places the value "nodeNumber" into a character array
+  char intNodeA[10];           //creates a temporary character array
+  itoa(theIntA, intNodeA, 10); //places the value "nodeNumber" into a character array
+  char intNodeB[10];           //creates a temporary character array
+  itoa(theIntB, intNodeB, 10); //places the value "nodeNumber" into a character array
+  char intNodeC[10];           //creates a temporary character array
+  itoa(theIntC, intNodeC, 10); //places the value "nodeNumber" into a character array
+
+
+
   const char *delimiter = ",";  // a delimiter is what defines the seperations in your string/array
-  char bufferVal[10];
-  int bufferValue = 0;
-  itoa(bufferValue, bufferVal, 10);
+  const char *endCap = ">";
+  const char *startCap = "<";
 
-  strcpy(radiopacket, node);    // copies the character array "node" into radiopacket
-  strcat(radiopacket, delimiter); // concatenate (tacks on the end) the delimiter character
-  strcat(radiopacket, button); // concatenate (tacks on the end) the character array "button"
+  strcpy(radiopacket, intNodePrime); // concatenate (tacks on the end) the delimiter character
+  strcat(radiopacket, delimiter); // concatenate (tacks on the end) the character array "button"
+  strcat(radiopacket, intNodeA);
   strcat(radiopacket, delimiter);
-  strcat(radiopacket, yValue);
+  strcat(radiopacket, intNodeB);
   strcat(radiopacket, delimiter);
-  strcat(radiopacket, xValue);
+  strcat(radiopacket, intNodeC);
+  strcat(radiopacket, delimiter);
 
 
   //itoa(packetnum++, radiopacket + 13, 10); // adds the number of packet being sent. I don't think we need this.
