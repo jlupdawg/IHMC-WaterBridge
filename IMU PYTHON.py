@@ -3,7 +3,7 @@ import serial
 
 # configure the serial connections (the parameters differs on the device you are connecting to)
 ser = serial.Serial(
-    port='COM8',
+    port='COM10',
     baudrate=115200,
     parity=serial.PARITY_ODD,
     stopbits=serial.STOPBITS_TWO,
@@ -20,13 +20,13 @@ print ('Enter your commands below.\r\nInsert "exit" to leave the application.')
 #command = String(input("Enter command:"))
 #type(command)
 
-command = input('Input: ')
+command = raw_input('Input: ')
 print(command)
 
 send = bytes(command, 'utf-8')
 ser.write(send)
 
-print("Sent")
+#print("Sent")
 
 print(ser.read(1000))
 
