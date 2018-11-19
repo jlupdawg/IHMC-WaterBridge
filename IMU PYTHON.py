@@ -12,21 +12,21 @@ ser = serial.Serial(
 
 ser.isOpen()
 
-print ('Enter your commands below.\r\nInsert "exit" to leave the application.')
+#print ('Enter your commands below.\r\nInsert "exit" to leave the application.')
 
 
 
-#command = "#osct"
-#command = String(input("Enter command:"))
-#type(command)
-
-command = raw_input('Input: ')
+command = "#osct"
 print(command)
-
 send = bytes(command, 'utf-8')
 ser.write(send)
 
-#print("Sent")
+command = "#osn"
+print(command)
+send = bytes(command, 'utf-8')
+ser.write(send)
+
+print("Sent")
 
 print(ser.read(1000))
 
