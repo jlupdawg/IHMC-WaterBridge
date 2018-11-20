@@ -1,3 +1,4 @@
+
 void setMotors_Serial()                                                    //sets the motors straight from the incoming serial data
 {
   leftMotorValue = map(inByte[numberOfInputs-2][1], -100 , 100, -255, 255);      //maps a value given in percent to an analog value
@@ -46,4 +47,3 @@ void setMotors_dock()
 {
 
 }
-

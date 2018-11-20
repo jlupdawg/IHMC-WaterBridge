@@ -76,6 +76,27 @@ bool updateMotors = true;        // if inByte changes then update the motors
 int leftMotorValue = 0;
 int rightMotorValue = 0;
 
+/************************************************************************************************/
+
+/*************************************** Sonar Setup ********************************************/
+//Pins for Corner Sonar sensors
+#define trigPin_1 13
+#define echoPin_1 4
+#define trigPin_2 10
+#define echoPin_2 9
+#define trigPin_3 7
+#define echoPin_3 8
+#define trigPin_4 12
+#define echoPin_4 11
+
+//Pins for Front and Back sonar sensors
+//#define (Pin-On-Sensor)_(Sensor-Number) (Pin-On-Arduino)
+#define Pin2_1 3
+#define Pin2_2 5
+#define Pin4_2 2 //trigger pin for both Front and Back Sensors
+
+double duration, distance_corner, distance_front_back, s1, s2, s3, s4, f1, b1;
+double CalibrationFactor;
 
 /************************************************************************************************/
 
@@ -154,10 +175,9 @@ void loop() {
     dock();
     setMotors_dock();
   }
+  
+/***********************************************************************************SONAR LOOP CODE************************************************************************************************/
+  
+  Override(f1, b1);
 
 }
-
-
-
-
-
