@@ -2,17 +2,22 @@
 import serial
 import struct
 import time
+import board
+import busio
+import adafruit_gps
 '''#########################################'''
 
 ################# Add. Codes ##################
-import GPS  ##Change to name of GPS code
+from HaversineFunction import haversine
+from BearingAngleFunction import calculate_initial_compass_bearing
+
 import IMU  ##Change to name of IMU code
 '''#########################################'''
 
 ################################## Serial out Setup ###############################
-ser = serial.Serial('/dev/ttyACM0')  ##Define a Serial Port
-print (ser.name)                     ##Print The Serial Port
-ser.baudrate = 115200                ##Define the Baudrate. Must Match Arduino Code
+Arduino = serial.Serial('/dev/ttyACM0')  ##Define a Serial Port
+print (Arduino.name)                     ##Print The Serial Port
+Arduino.baudrate = 115200                ##Define the Baudrate. Must Match Arduino Code
 time.sleep(2)                        ##Wait for the Serial Communication to begin
 string = ''                          ##Creates an empty string to send over Serial
 delimiter = ','                      ##Creates a demiliter for arduino to split the values
@@ -37,13 +42,60 @@ waypointDistance = 0                 ##Distance from boat to waypoint
 maxRange = 18                        ##Max Accuaracy of GPS in feet
 '''#############################################################################'''
 
+##################################### GPS Setup ###################################
+waypoint_lat = 30
+waypoint_long = 50
+uart = serial.Serial("/dev/ttyAMA0", baudrate=9600, timeout=3000)
+gps = adafruit_gps.GPS(uart, debug=False)
+gps.send_command(b'PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+gps.send_command(b'PMTK220,1000')
+last_print = time.monotonic()
+'''#############################################################################'''
+
+##################################### GPS Setup ###################################
+IMU = serial.Serial(
+    port='COM10',
+    baudrate=115200,
+    parity=serial.PARITY_ODD,
+    stopbits=serial.STOPBITS_TWO,
+    bytesize=serial.SEVENBITS
+)
+IMU.isOpen()
+
+command = "#o1"
+print(command)
+send = bytes(command, 'utf-8')
+IMU.write(send)
+
+command = "#osn"
+print(command)
+send = bytes(command, 'utf-8')
+IMU.write(send)
+
+'''#############################################################################'''
+
+
 while True:
+    updateGPS()
     getCurrentHeading()              ##Get heading from IMU magnetometer code
     getWayPointHeading()             ##Get heading from GPS (description below)
     getDistance()                    ##Get distance from GPS (description below)
     checkStatus()                    ##If the boat is closer than the max range the enable docking mode
     updateMotors()                   ##Update the motors, based on required and current headings
     toArduino()                      ##Send status and motor values to Arduino
+
+def updateGPS()
+    gps.update()
+    # Every second print out current location details if there's a fix.
+    current = time.monotonic()
+    if current - last_print >= 1.0:
+        last_print = current
+        if not gps.has_fix:
+            # Try again if we don't have a fix yet.
+            print('Waiting for fix...')
+            continue
+        lat = int(gps.latitude)
+        longit = int(gps.longitude)
 
 def updateMotors()
     angularDiff = requiredHeading - currentHeading ##Final -Initial
@@ -89,76 +141,15 @@ def getCurrentHeading()
     ##pull heading directly from the IMU
 
 def getWaypointHeading()
-    requiredHeading = GPS.reqHeading()
-    ##determine the required angle to get to the waypoint, directly
-    '''
-def calculate_initial_compass_bearing(pointA, pointB):
-    """
-    Calculates the bearing between two points.
-    The formulae used is the following:
-        θ = atan2(sin(Δlong).cos(lat2),
-                  cos(lat1).sin(lat2) − sin(lat1).cos(lat2).cos(Δlong))
-    :Parameters:
-      - `pointA: The tuple representing the latitude/longitude for the
-        first point. Latitude and longitude must be in decimal degrees
-      - `pointB: The tuple representing the latitude/longitude for the
-        second point. Latitude and longitude must be in decimal degrees
-    :Returns:
-      The bearing in degrees
-    :Returns Type:
-      float
-    """
-    if (type(pointA) != tuple) or (type(pointB) != tuple):
-        raise TypeError("Only tuples are supported as arguments")
-
-    lat1 = math.radians(pointA[0])
-    lat2 = math.radians(pointB[0])
-
-    diffLong = math.radians(pointB[1] - pointA[1])
-
-    x = math.sin(diffLong) * math.cos(lat2)
-    y = math.cos(lat1) * math.sin(lat2) - (math.sin(lat1)
-            * math.cos(lat2) * math.cos(diffLong))
-
-    initial_bearing = math.atan2(x, y)
-
-    # Now we have the initial bearing but math.atan2 return values
-    # from -180° to + 180° which is not what we want for a compass bearing
-    # The solution is to normalize the initial bearing as shown below
-    initial_bearing = math.degrees(initial_bearing)
-    compass_bearing = (initial_bearing + 360) % 360
-
-    return compass_bearing
-    '''
-
-def getDistance()
-    waypointDistance = GPS.getDistance()
-    ##use the haversine formula to find the distance between the coordinates of the
-    ##waypoint and the coordinates of the boat (in feet)
+    requiredHeading = calculate_initial_compass_bearing(longit, lat, waypoint_long, waypoint_lat)
     
-    '''
-from math import radians, cos, sin, asin, sqrt
+def getDistance()
+    waypointDistance = haversine(longit, lat, waypoint_long, waypoint_lat)
 
-def haversine(lon1, lat1, lon2, lat2):
-    """
-    Calculate the great circle distance between two points 
-    on the earth (specified in decimal degrees)
-    """
-    # convert decimal degrees to radians 
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
-
-    # haversine formula 
-    dlon = lon2 - lon1 
-    dlat = lat2 - lat1 
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a)) 
-    r = 3956 # Radius of earth in miles
-    return c * r
-    '''
 
 def toArduino()
     string = str(status) + delimiter + str(leftMotor) + delimiter + str(rightMotor)
     b = bytes(string, 'utf-8')
     print(b)
-    ser.write(b)
+    Arduino.write(b)
     #time.sleep(2)   #must have a delay between sends. 
