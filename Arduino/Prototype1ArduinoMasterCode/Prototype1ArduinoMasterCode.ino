@@ -81,6 +81,14 @@ bool controllerMode = false;
 
 /************************************************************************************************/
 
+/*************************************** Sonar Setup ********************************************/
+
+int Direction = 3; //Left and Right are relative to the front sonar sensor/front of boat
+const int ThermistorPin = 0;
+double AmbientTemp; //Celcius
+
+/************************************************************************************************/
+
 /***************************************** Docking **********************************************/
 
 int dockingArray[4] = {
@@ -191,7 +199,7 @@ void setup() {
   rightMotor.attach(rightMotorPin);
   leftMotor.writeMicroseconds(1500);
   rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
-  delay(1000); // delay to allow the ESC to recognize the stopped signal
+  delay(7000); // delay to allow the ESC to recognize the stopped signal
 
 
 }
