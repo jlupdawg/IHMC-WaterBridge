@@ -52,7 +52,7 @@ gps.send_command(b'PMTK220,1000')
 last_print = time.monotonic()
 '''#############################################################################'''
 
-##################################### GPS Setup ###################################
+##################################### IMU Setup ###################################
 IMU = serial.Serial(
     port='COM10',
     baudrate=115200,
@@ -61,6 +61,10 @@ IMU = serial.Serial(
     bytesize=serial.SEVENBITS
 )
 IMU.isOpen()
+
+total = 0
+averageCounter = 0
+average = 0
 
 command = "#o1"
 print(command)
@@ -84,7 +88,7 @@ while True:
     updateMotors()                   ##Update the motors, based on required and current headings
     toArduino()                      ##Send status and motor values to Arduino
 
-def updateGPS()
+def updateGPS():
     gps.update()
     # Every second print out current location details if there's a fix.
     current = time.monotonic()
@@ -97,29 +101,29 @@ def updateGPS()
         lat = int(gps.latitude)
         longit = int(gps.longitude)
 
-def updateMotors()
+def updateMotors():
     angularDiff = requiredHeading - currentHeading ##Final -Initial
     
-    if abs(angularDiff) > headingRange:            ##If we are outside of the set tolerance:
-        if abs(angularDiff) > 180:                  ##If angular difference is greater than 180, optimize turn:
-            if angularDiff >= 0:                     
+    if (abs(angularDiff) > headingRange):            ##If we are outside of the set tolerance:
+        if (abs(angularDiff) > 180):                  ##If angular difference is greater than 180, optimize turn:
+            if (angularDiff >= 0):                     
                 angularDiff = angularDiff - 180
             else:
                 angluarDiff - angularDiff + 180
                 
-            if angularDiff > 0:                      ##If new angular diff is greater than 0 turn LEFT
+            if (angularDiff > 0):                      ##If new angular diff is greater than 0 turn LEFT
                 rightMotor = maxSpeed/turnFactor
                 leftMotor = -maxSpeed/turnFactor
             else:                                    ##Else angular diff is less than 0 turn RIGHT
                 rightMotor = -maxSpeed/turnFactor
                 leftMotor = maxSpeed/turnFactor
                 
-        else if  abs(angularDiff) == 180:            ##Else If angular difference is 180, turn RIGHT
+        elif (abs(angularDiff) == 180):            ##Else If angular difference is 180, turn RIGHT
                 rightMotor = -maxSpeed/turnFactor
                 leftMotor = maxSpeed/turnFactor
         
         else:                                        ##Else no optimization is required
-            if angularDiff > 0:                       ##If required > current turn right
+            if (angularDiff > 0):                       ##If required > current turn right
                 rightMotor = -maxSpeed/turnFactor
                 leftMotor = maxSpeed/turnFactor
             else:                                     ##Else required < current turn left
@@ -130,24 +134,40 @@ def updateMotors()
         leftMotor = maxSpeed
         
 
-def checkStatus()
+def checkStatus():
     if waypointDistance > maxRange:
-    status = 0
+        status = 0
     else:
-    status = 1
+        status = 1
 
-def getCurrentHeading()
+def getCurrentHeading():
     currentHeading = IMU.heading()
-    ##pull heading directly from the IMU
+    line = IMU.readline().strip()
 
-def getWaypointHeading()
+    strLine = str(line.decode('utf-8'))
+    rawHeading = float(strLine)
+
+    calHeading = rawHeading
+
+    if(averageCounter == 5):
+        average = total / 5
+        total = 0
+        averageCounter = 0
+
+    if(averageCounter < 5):
+        total = total+calHeading
+        averageCounter = averageCounter + 1
+
+    
+
+def getWaypointHeading():
     requiredHeading = calculate_initial_compass_bearing(longit, lat, waypoint_long, waypoint_lat)
     
-def getDistance()
+def getDistance():
     waypointDistance = haversine(longit, lat, waypoint_long, waypoint_lat)
 
 
-def toArduino()
+def toArduino():
     string = str(status) + delimiter + str(leftMotor) + delimiter + str(rightMotor)
     b = bytes(string, 'utf-8')
     print(b)
