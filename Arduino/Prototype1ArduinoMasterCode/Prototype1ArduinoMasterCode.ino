@@ -114,8 +114,8 @@ LiquidCrystal lcd(30, 32, 22, 24, 26, 28);
 
 /*************************************** Motor Setup ********************************************/
 
-byte leftMotorPin = 8;
-byte rightMotorPin = 9;
+byte leftMotorPin = 9;
+byte rightMotorPin = 10;
 bool updateMotors = true;        // if inByte changes then update the motors
 int leftMotorValue = 0;
 int rightMotorValue = 0;
@@ -127,7 +127,7 @@ int maxSpeed = 1900;
 
 /************************************************************************************************/
 
-/*************************************** Sonar Setup ********************************************/
+/*************************************** Sonar Setup ********************************************
 //Pins for Corner Sonar sensors
 #define trigPin_1 13
 #define echoPin_1 4
@@ -155,20 +155,13 @@ void setup() {
   lcd.clear();
   // Print a message to the LCD.
   lcd.print("hello, world!");
-
+  Serial.begin(115200);
   /************************************************* This bit is initalizing the radio *****************************/
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
-
-  Serial.begin(115200);
-  while (!Serial) {
-    delay(1);
-  }
-
   delay(100);
-
-  Serial.println("Feather LoRa TX Test!");
-
+  Serial.println("Arduino LoRa RX Test!");
+  
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
@@ -180,26 +173,28 @@ void setup() {
     while (1);
   }
   Serial.println("LoRa radio init OK!");
-
+ 
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   if (!rf95.setFrequency(RF95_FREQ)) {
     Serial.println("setFrequency failed");
     while (1);
   }
   Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
-
+ 
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
-
+ 
   // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
+  /***************************************************************************************************************/
+
   /***************************************************************************************************************/
   leftMotor.attach(leftMotorPin);
   rightMotor.attach(rightMotorPin);
   leftMotor.writeMicroseconds(1500);
   rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
-  delay(7000); // delay to allow the ESC to recognize the stopped signal
+  delay(1000); // delay to allow the ESC to recognize the stopped signal
 
 
 }
@@ -210,7 +205,6 @@ void loop() {
 
   if ((controllerMode == false) && (dockingMode == false))  //must reset the master board after putting the boat in controllerMode. This is intentional
   {
-    //Serial.println("normal mode");
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();                  // check incoming serial communication
     printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
@@ -240,6 +234,6 @@ void loop() {
 
   /***********************************************************************************SONAR LOOP CODE************************************************************************************************/
 
-  Object_Location();
+  //Object_Location();
 
 }

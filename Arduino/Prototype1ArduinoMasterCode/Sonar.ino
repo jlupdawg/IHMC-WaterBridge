@@ -1,4 +1,4 @@
-
+/*
 void Object_Location() {
 
   if (leftMotorValue == 1500 && rightMotorValue == 1500) {
@@ -104,3 +104,4 @@ int SonarSensor_Corner(int trigPin, int echoPin) {
 
   return distance_corner;
 }
+*/

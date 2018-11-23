@@ -5,7 +5,7 @@ String number;
 #include <LiquidCrystal.h>
 
 // initialize the library with the numbers of the interface pins
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+LiquidCrystal lcd(30, 32, 22, 24, 26, 28);
 
 void setup(){
 
@@ -14,7 +14,7 @@ void setup(){
   // set up the LCD's number of columns and rows: 
   lcd.begin(16, 2);
   // Print a message to the LCD.
-  lcd.print("hello, world!");
+  lcd.print("GPSCheck");
 }
 
 void loop(){
