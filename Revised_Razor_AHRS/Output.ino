@@ -69,9 +69,9 @@ void output_calibration(int calibration_sensor)
 void output_sensors_text(char raw_or_calibrated)
 {
   SerialPort.print("#A-"); SerialPort.print(raw_or_calibrated); SerialPort.print('=');
-  SerialPort.print(accel[0]/GRAVITY); SerialPort.print(",");
-  SerialPort.print(accel[1]/GRAVITY); SerialPort.print(",");
-  SerialPort.print(accel[2]/GRAVITY); SerialPort.println();
+  SerialPort.print(accel[0]); SerialPort.print(",");
+  SerialPort.print(accel[1]); SerialPort.print(",");
+  SerialPort.print(accel[2]); SerialPort.println();
 
   SerialPort.print("#M-"); SerialPort.print(raw_or_calibrated); SerialPort.print('=');
   SerialPort.print(magnetom[0]); SerialPort.print(",");
@@ -125,18 +125,5 @@ void output_sensors()
       output_sensors_text('C');
     }
   }
-  delay(1000);
 }
-
-void output_acc_NED(){
-  
-  /*SerialPort.print(aNorth); SerialPort.print(", ");
-  SerialPort.print(aEast); SerialPort.print(", ");
-  SerialPort.println(aDown); SerialPort.print(", ");*/
-
-  /*SerialPort.print(accel[0]/9.8); SerialPort.print(", ");
-  SerialPort.print(accel[1]/9.8); SerialPort.print(", ");
-  SerialPort.println(accel[2]/9.8); SerialPort.print(", ");*/
-  
-  }
 

@@ -1,5 +1,3 @@
-#include <MatrixMath.h>
-
 #include <MPU9250_RegisterMap.h>
 #include <SparkFunMPU9250-DMP.h>
 
@@ -16,7 +14,7 @@
   Positive roll  : right wing down
   Positive pitch : nose up
   
-  Transformation orde/r: first yaw then pitch then roll.
+  Transformation order: first yaw then pitch then roll.
 */
 
 /*
@@ -34,7 +32,7 @@
       "#ot" - Output angles in TEXT format (Output frames have form like "#YPR=-142.28,-5.38,33.52",
               followed by carriage return and line feed [\r\n]).
       
-      // Sensor calibrationde
+      // Sensor calibration
       "#oc" - Go to CALIBRATION output mode.
       "#on" - When in calibration mode, go on to calibrate NEXT sensor.
       
@@ -109,12 +107,13 @@ MPU9250_DMP imu;
 #define OUTPUT__MODE_SENSORS_CALIB 2 // Outputs calibrated sensor values for all 9 axes
 #define OUTPUT__MODE_SENSORS_RAW 3 // Outputs raw (uncalibrated) sensor values for all 9 axes
 #define OUTPUT__MODE_SENSORS_BOTH 4 // Outputs calibrated AND raw sensor values for all 9 axes
+#define OUTPUT__MODE_NED 5 //Outputs heading and accelerometer in NED coordinates
 // Output format definitions (do not change)
 #define OUTPUT__FORMAT_TEXT 0 // Outputs data as text
 #define OUTPUT__FORMAT_BINARY 1 // Outputs data as binary float
 
 // Select your startup output mode and format here!
-int output_mode = 1; // OUTPUT__MODE_ANGLES;
+int output_mode = 5; // OUTPUT__MODE_ANGLES;
 int output_format = OUTPUT__FORMAT_TEXT;
 
 // Select if serial continuous streaming output is enabled per default on startup.
@@ -223,7 +222,7 @@ const float magn_ellipsoid_transform[3][3] = { { 0.996647, -0.00682284, .0066923
 #define TO_DEG(x) (x * 57.2957795131)  // *180/pi
 
 // Moving average filter
-const int numReadings = 60;
+const int numReadings = 1;
 const int numReadings2 = 5;
 int readIndex = 0; // the index of the current reading
 int readIndex2 = 0;
@@ -246,6 +245,11 @@ float pitch_readings[numReadings2];
 float accel[3];  // Actually stores the NEGATED acceleration (equals gravity, if board not moving).
 float accel_min[3];
 float accel_max[3];
+
+float aNED[3]; //Used for accelerometer_NED function
+float aNorth;
+float aEast;
+float aDown;
 
 float magnetom[3];
 float magnetom_min[3];
@@ -276,13 +280,6 @@ float errorYaw[3] = {0, 0, 0};
 float DCM_Matrix[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
 float Update_Matrix[3][3] = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
 float Temporary_Matrix[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-
-// Rotation Matrix Variables
-float aNorth;
-float aEast;
-float aDown;
-double rotMat[3][3];
-double* rotMatInv[9];
 
 // Euler angles
 float yaw;
@@ -401,19 +398,17 @@ void turn_output_stream_off()
 // Blocks until another byte is available on serial port
 char readChar()
 {
-  //while (SerialPort.available() < 1) { } // Block
+  while (SerialPort.available() < 1) { } // Block
   return SerialPort.read();
 }
 
 void setup()
 {
-
   pinMode (STATUS_LED_PIN, OUTPUT);
   digitalWrite(STATUS_LED_PIN, LOW);
   pinMode(MPU9250_INT_PIN, INPUT_PULLUP);
   // Init serial output
   SerialPort.begin(OUTPUT__BAUD_RATE);
-  Serial.println("PLSHELP");
   if (imu.begin() != INV_SUCCESS)
   {
     while (1)
@@ -467,29 +462,12 @@ void setup()
 // Main loop
 void loop()
 {
-    //MAGNETOMETER X COMMAND
-
-
-
-
-
-  
 	// Read incoming control messages
 	if (SerialPort.available() >= 2)
 	{
 		if (SerialPort.read() == '#') // Start of new control message
 		{
 			int command = SerialPort.read(); // Commands
-
-////////////////////////////MAGNETOMETER X////////////////////////////////
-
-      if (command == 'x')
-      {
-        magX(command);
-      }
-
-
-        
 			if (command == 'f') // request one output _f_rame
 				output_single_on = true;
 			else if (command == 's') // _s_ynch request
@@ -553,6 +531,10 @@ void loop()
 					reset_calibration_session_flag = true;
 					turn_output_stream_on();
 				}
+        else if (output_param == 'i'){
+          output_mode = OUTPUT__MODE_NED;
+          output_format = OUTPUT__FORMAT_TEXT;
+          }
 				else if (output_param == 'e') // _e_rror output settings
 				{
 					char error_param = readChar();
@@ -609,19 +591,25 @@ void loop()
 			Normalize();
 			Drift_correction();
 			Euler_angles();
+     
+			if (output_stream_on || output_single_on) output_angles();
+		}
+   else if (output_mode == OUTPUT__MODE_NED)  // Output angles
+   {
+      // Apply sensor calibration
+      compensate_sensor_errors();
 
-     ///////////////////////////////////////////////////////////////////////////////////
-     //init_rotation_matrix(rotMatInv, yaw, pitch, roll);
-     //Matrix_update();
-     acceleration_NED();
-     ///////////////////////////////////////////////////////////////////////////////////
+      // Run DCM algorithm
+      Compass_Heading(); // Calculate magnetic heading
+      Matrix_update();
+      Normalize();
+      Drift_correction();
+      Euler_angles();
 
-			//if (output_stream_on || output_single_on) output_angles();
-		//}
-
+      accelerometer_NED();
+     
       if (output_stream_on || output_single_on) output_acc_NED();
     }
-   
 		else  // Output sensor values
 		{
 			if (output_stream_on || output_single_on) output_sensors();
