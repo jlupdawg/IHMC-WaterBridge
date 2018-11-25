@@ -15,7 +15,7 @@ boolean verifiedBoat; //stores whether the boat has confirmed that it is the obj
 boolean dockingMode;
 boolean boatDocked; //stores whether or not the dock has completed docking
 
-void loop() {
+void dockingMechanism() {
 
   while (dockingMode){
 
