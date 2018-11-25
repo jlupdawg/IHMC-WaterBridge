@@ -28,9 +28,9 @@ void dockingMechanism() {
     
     lawOfCosines(sonarDist1, sonarDist2, distBetweenSensors);
     findAlpha();
-    
-    calculateDesiredHeading();
-    //getDesiredHeading;
+
+    getCurrentHeading();
+    calculateDesiredHeading();//getDesiredHeading;
     
     changeHeading();
 
