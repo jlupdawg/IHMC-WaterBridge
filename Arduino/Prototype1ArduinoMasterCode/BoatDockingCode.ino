@@ -14,7 +14,7 @@ float currentHeading;
 float dockDirection; //vector in the direction the dock is facing
 
 boolean verifiedBoat; //stores whether the boat has confirmed that it is the object returning sonar pulses
-boolean dockingMode;
+//boolean dockingMode = false;
 boolean boatDocked; //stores whether or not the dock has completed docking
 
 void DockingMechanism() {

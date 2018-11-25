@@ -46,7 +46,7 @@ bool newData = false;
 
 
 #include <SPI.h>
-//#include <RH_RF95.h>
+#include <RH_RF95.h>
 
 /************ Radio Setup ***************/
 
@@ -61,7 +61,7 @@ bool newData = false;
 #define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
-//RH_RF95 rf95(RFM95_CS, RFM95_INT);
+RH_RF95 rf95(RFM95_CS, RFM95_INT);
 /************************************************************************************************/
 
 /************************************ Serial Communication **************************************/
@@ -95,7 +95,6 @@ int dockingArray[4] = {
   0, 0, 0, 0
 }; //node, inRange (high / low), leftSonar, rightSonar
 int dockingStatus = 0;
-bool dockingMode = false;
 
 /************************************************************************************************/
 /***************************************** Logging **********************************************/
@@ -124,6 +123,8 @@ Servo rightMotor;
 int minSpeed = 1100;
 int stopSpeed = 1500;
 int maxSpeed = 1900;
+
+bool dockingMode = false;
 
 /************************************************************************************************/
 

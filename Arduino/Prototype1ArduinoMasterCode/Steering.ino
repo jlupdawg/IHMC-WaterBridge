@@ -25,8 +25,8 @@ void checkDist(){
 
 void incrementMotors(int leftIncVal, int rightIncVal){
 
-  leftIncVal = map(leftIncVal, -100, 100, minSpeed, maxSpeed)
-  rightIncVal = map(rightIncVal, -100, 100, minSpeed, maxSpeed)
+  leftIncVal = map(leftIncVal, -100, 100, minSpeed, maxSpeed);
+  rightIncVal = map(rightIncVal, -100, 100, minSpeed, maxSpeed);
   
   leftMotorValue += leftIncVal;
   rightMotorValue += rightIncVal;
