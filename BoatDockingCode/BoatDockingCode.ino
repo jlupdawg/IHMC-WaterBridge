@@ -7,6 +7,8 @@ float distBetweenSensors; //distance between the mounted sensors
 
 float theta; //angle between the sonar pulses
 float alpha; //angle between triangle created by sonar pulses and the vector negative of the direction the dock is facing
+
+float headingError;
 float desiredHeading;
 float currentHeading;
 float dockDirection; //vector in the direction the dock is facing
@@ -15,7 +17,7 @@ boolean verifiedBoat; //stores whether the boat has confirmed that it is the obj
 boolean dockingMode;
 boolean boatDocked; //stores whether or not the dock has completed docking
 
-void dockingMechanism() {
+void DockingMechanism() {
 
   while (dockingMode){
 

@@ -46,7 +46,7 @@ bool newData = false;
 
 
 #include <SPI.h>
-#include <RH_RF95.h>
+//#include <RH_RF95.h>
 
 /************ Radio Setup ***************/
 
@@ -61,7 +61,7 @@ bool newData = false;
 #define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
-RH_RF95 rf95(RFM95_CS, RFM95_INT);
+//RH_RF95 rf95(RFM95_CS, RFM95_INT);
 /************************************************************************************************/
 
 /************************************ Serial Communication **************************************/
