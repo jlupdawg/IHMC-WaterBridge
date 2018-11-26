@@ -29,11 +29,11 @@ void DockingMechanism() {
     //readSensor1(); //Radio
     //readSensor2(); //Radio
 
-    lawOfCosines(sonarDist1, sonarDist2, distBetweenSensors);
-    findAlpha();
+    //lawOfCosines(sonarDist1, sonarDist2, distBetweenSensors); //ON DOCK
+    //findAlpha(); //ON DOCK
 
-    getCurrentHeading();
-    calculateDesiredHeading();//getDesiredHeading;
+    //getCurrentHeading();
+    //calculateDesiredHeading();//getDesiredHeading; //ON DOCK
 
     changeHeading();
 
