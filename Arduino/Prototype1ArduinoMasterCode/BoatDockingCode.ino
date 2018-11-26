@@ -40,7 +40,23 @@ void DockingMechanism() {
     checkDist();
   }
 
-
-
+  else if(boatDocked == false && boatDocked == 'B'){
+    //Turn right
+  }
+  else if(boatDocked == false && boatDocked == 'C'){
+    //Turn left
+  }
+  else if(boatDocked == false && boatDocked == 'D'){
+    //docked
+    //Stop
+    //In the dock code we should make it so that the dock is unable to send D unless it was previously B or C
+    //boatDocked=true;
+  }
+  else if(boatDocked == true){
+    Do nothing
+  }
+  else{
+    //Error
+  }
 
 }
