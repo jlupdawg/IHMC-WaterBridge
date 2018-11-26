@@ -3,17 +3,17 @@
 //If it is not in section A, we must get it in section A
 //Section A is the general region where both sensors can sense the boat
 
-void runCalc(){
-  if(sonar1 < 2000 && sonar2 < 2000){
+void findChar(){
+  if(sonarDist1 < 2000 && sonarDist2 < 2000){
     //A
     }
-  if(sonar1 < 2000 && sonar2 >= 2000){
+  if(sonarDist1 < 2000 && sonarDist2 >= 2000){
     //B
     }
-  if(sonar2 < 2000 && sonar1 >= 2000){
+  if(sonarDist2 < 2000 && sonarDist1 >= 2000){
     //C
     }
-  if(sonar1 >= 2000 && sonar2 >= 2000){
+  if(sonarDist1 >= 2000 && sonarDist2 >= 2000){
     //D
     }
   }
