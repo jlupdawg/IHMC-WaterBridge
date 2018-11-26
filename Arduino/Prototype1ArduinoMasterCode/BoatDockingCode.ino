@@ -17,31 +17,30 @@ boolean verifiedBoat; //stores whether the boat has confirmed that it is the obj
 //boolean dockingMode = false;
 boolean boatDocked; //stores whether or not the dock has completed docking
 
+char dockingSection;
+
 void DockingMechanism() {
 
-  while (dockingMode){
-
-    if(verifiedBoat == false){
-      pulseSonar();
-      }
+  if (verifiedBoat == false) {
+    pulseSonar();
+  }
+  else if(boatDocked == false && boatDocked == 'A') {
 
     //readSensor1(); //Radio
     //readSensor2(); //Radio
-    
+
     lawOfCosines(sonarDist1, sonarDist2, distBetweenSensors);
     findAlpha();
 
     getCurrentHeading();
     calculateDesiredHeading();//getDesiredHeading;
-    
+
     changeHeading();
 
-    if(boatDocked == false){
-      checkDist();
-      }
-    
+    checkDist();
   }
 
-  
+
+
 
 }

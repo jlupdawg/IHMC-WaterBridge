@@ -226,11 +226,12 @@ void loop() {
   }
   else if (dockingMode == true)
   {
-    incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
+    /*incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();
     dock();
     setMotors_dock();
-    loggingData("Docking Mode");
+    loggingData("Docking Mode");*/
+    DockingMechanism();
   }
 
   /***********************************************************************************SONAR LOOP CODE************************************************************************************************/
