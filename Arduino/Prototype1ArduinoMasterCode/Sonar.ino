@@ -1,4 +1,9 @@
-/*
+void SonarSensor_Front_Back(double CalibrationFactor) {
+  CalibrationFactor = CalibrationFactor;
+}
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 void Object_Location() {
 
   if (leftMotorValue == 1500 && rightMotorValue == 1500) {
@@ -53,6 +58,8 @@ void Object_Location() {
   }
 }
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 double CalibrationFactorCalculation() {
   double RawTemp = analogRead(0); //Reads raw temperature data, stores it in RawTemp
 
@@ -69,9 +76,7 @@ double CalibrationFactorCalculation() {
   return CalibrationFactor;
 }
 
-void SonarSensor_Front_Back(double CalibrationFactor) {
-  CalibrationFactor = CalibrationFactor;
-}
+/*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 int SonarSensor_Front_Back(int trigPin, int echoPin) {
 
@@ -82,12 +87,11 @@ int SonarSensor_Front_Back(int trigPin, int echoPin) {
   duration = pulseIn(echoPin, HIGH);
   distance_front_back = (duration / CalibrationFactor);
   delayMicroseconds(5); //helps make the distance readings more stable
+  
   return distance_front_back;
 }
 
-void SonarSensor_Corner(double CalibrationFactor) {
-  CalibrationFactor = CalibrationFactor;
-}
+/*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 int SonarSensor_Corner(int trigPin, int echoPin) {
 
@@ -104,4 +108,3 @@ int SonarSensor_Corner(int trigPin, int echoPin) {
 
   return distance_corner;
 }
-*/

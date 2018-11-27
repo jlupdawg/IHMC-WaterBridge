@@ -54,7 +54,3 @@ void printInByte()
     updateMotors = false;                                   
   }
 }
-
-
-
-

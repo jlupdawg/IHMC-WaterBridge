@@ -3,21 +3,6 @@
 //If it is not in section A, we must get it in section A
 //Section A is the general region where both sensors can sense the boat
 
-void findChar(){
-  if(sonarDist1 < 2000 && sonarDist2 < 2000){
-    //A
-    }
-  if(sonarDist1 < 2000 && sonarDist2 >= 2000){
-    //B
-    }
-  if(sonarDist2 < 2000 && sonarDist1 >= 2000){
-    //C
-    }
-  if(sonarDist1 >= 2000 && sonarDist2 >= 2000){
-    //D
-    }
-  }
-
 void lawOfCosines(float a, float b, float c){
   
   theta = acos((a*a + b*b - c*c) / (2*a*b));
