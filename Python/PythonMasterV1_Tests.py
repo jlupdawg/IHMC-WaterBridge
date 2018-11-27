@@ -168,7 +168,7 @@ def getDistance():
 
 
 def toArduino():
-    string = str(status) + delimiter + str(leftMotor) + delimiter + str(rightMotor)
+    string = str(status) + delimiter + str(leftMotor) + delimiter + str(rightMotor) + delimiter + str(currentHeading)
     b = bytes(string, 'utf-8')
     print(b)
     Arduino.write(b)
