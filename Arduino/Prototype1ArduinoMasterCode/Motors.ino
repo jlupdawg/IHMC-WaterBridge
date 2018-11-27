@@ -76,7 +76,15 @@ void setMotors_Controller()
 }
 
 
-void setMotors_dock()
-{
+void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal){
+  leftMotorValue = map(leftMotorDockVal, -100 , 100, minSpeed, maxSpeed);    //maps a value given in percent to an analog value
+  rightMotorValue = map(rightMotorDockVal, -100 , 100, minSpeed, maxSpeed);   //maps a value given in percent to an analog value
+
+  
+  leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
+  rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
+
+  leftMotor.writeMicroseconds(leftMotorValue);
+  rightMotor.writeMicroseconds(rightMotorValue);
 
 }

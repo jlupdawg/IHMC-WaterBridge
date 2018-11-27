@@ -14,7 +14,7 @@ void lawOfCosines(float a, float b, float c){
 
 void findAlpha(){
    
-  alpha = sonarDist1 * sin(theta) / distBetweenSensors - 90;
+  alpha = distanceS1 * sin(theta) / distBetweenSensors - 90;
   
   }
 

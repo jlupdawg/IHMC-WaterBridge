@@ -1,3 +1,27 @@
+float f1;
+float b1;
+float s1;
+float s2;
+float s3;
+float s4;
+float Pin4_2;
+float Pin2_1;
+float Pin2_2;
+float duration;
+float distance_corner;
+float distance_front_back;
+float CalibrationFactor;
+float trigPin_1;
+float trigPin_2;
+float trigPin_3;
+float trigPin_4;
+float echoPin_1;
+float echoPin_2;
+float echoPin_3;
+float echoPin_4;
+//I INITIALIZED THESE VARIABLES HERE SO THE CODE WILL VERIFY/COMPILE
+//PLEASE MOVE THE VARIABLES HERE FROM WHEREVER YOU COPIED THEM FROM
+
 void SonarSensor_Front_Back(double CalibrationFactor) {
   CalibrationFactor = CalibrationFactor;
 }

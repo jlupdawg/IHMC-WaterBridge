@@ -12,12 +12,10 @@ void sendRadio()
 
   char node[10];           //creates a temporary character array
   itoa(nodeNumber, node, 10); //places the value "nodeNumber" into a character array
-  char xValue[10];
-  itoa(xAxis, xValue, 10);
-  char yValue[10];
-  itoa(yAxis, yValue, 10);
-  char button[10];
-  itoa(buttonNumber, button, 10);
+  char locVarArr[10];
+  itoa(regionVariable, locVarArr, 10);
+  char desiredHeadArr[10];
+  itoa(desiredHeading, desiredHeadArr, 10);
   const char *delimiter = ",";  // a delimiter is what defines the seperations in your string/array
   char bufferVal[10];
   int bufferValue = 0;
@@ -25,11 +23,9 @@ void sendRadio()
 
   strcpy(radiopacket, node);    // copies the character array "node" into radiopacket
   strcat(radiopacket, delimiter); // concatenate (tacks on the end) the delimiter character
-  strcat(radiopacket, button); // concatenate (tacks on the end) the character array "button"
+  strcat(radiopacket, locVarArr); // concatenate (tacks on the end) the character array "button"
   strcat(radiopacket, delimiter);
-  strcat(radiopacket, yValue);
-  strcat(radiopacket, delimiter);
-  strcat(radiopacket, xValue);
+  strcat(radiopacket, desiredHeadArr);
 
 
   //itoa(packetnum++, radiopacket + 13, 10); // adds the number of packet being sent. I don't think we need this.
@@ -38,3 +34,7 @@ void sendRadio()
   rf95.send((uint8_t *)radiopacket, strlen(radiopacket));  //sends the unsigned 8 bit integer from ram at the address "radiopacket" and the length of the radiopacket
   rf95.waitPacketSent(); //unsure what this does. I assume it creates a minimal delay for radio clarity.
 }
+
+void receiveRadio(){
+  
+  }
