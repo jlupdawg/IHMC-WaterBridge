@@ -23,9 +23,9 @@ void Sonar_S1() {
   digitalWrite(TrigPinS1, LOW);
 
   duration = pulseIn(EchoPinS1, HIGH);
-  DistanceS1 = (duration / CalibrationFactor);
+  distanceS1 = (duration / CalibrationFactor);
 
-  if(DistanceS1 < 2000){
+  if(distanceS1 < 2000){
       IdentifyObject();
     }
 }
@@ -41,14 +41,14 @@ void Sonar_S2() {
   digitalWrite(TrigPinS2, LOW);
 
   duration = pulseIn(EchoPinS2, HIGH);
-  DistanceS2 = (duration / CalibrationFactor);
+  distanceS2 = (duration / CalibrationFactor);
 
-    if(DistanceS2 < 2000){
+    if(distanceS2 < 2000){
       IdentifyObject();
     }
 }
 
-IdentifyObject(){
+void IdentifyObject(){
 //Sends out a sonar pulse
 //Sends boat radio signal to listen for pulse
 //Dock waits for transmission back that pulse was recieved
@@ -61,17 +61,25 @@ IdentifyObject(){
   
   }
 
+void calibrationFactorCalculation(){
+  //Jacob what is this for?
+  }
+
 void findRegion(){
-  if(DistanceS1 < 2000 && sonarDist2 < 2000){
-    //A
+  if(distanceS1 < detectDist && distanceS2 < detectDist){
+    //Zone A
+    regionVariable=1;
     }
-  if(DistanceS1 < 2000 && sonarDist2 >= 2000){
-    //B
+  if(distanceS1 < detectDist && distanceS2 >= detectDist){
+    //Zone B
+    regionVariable=2;
     }
-  if(DistanceS2 < 2000 && DistanceS1 >= 2000){
-    //C
+  if(distanceS2 < detectDist && distanceS1 >= detectDist){
+    //Zone C
+    regionVariable=3;
     }
-  if(DistanceS1 >= 2000 && DistanceS2 >= 2000){
-    //D
+  if(distanceS1 >= detectDist && distanceS2 >= detectDist){
+    //Zone D
+    regionVariable=4;
     }
   }

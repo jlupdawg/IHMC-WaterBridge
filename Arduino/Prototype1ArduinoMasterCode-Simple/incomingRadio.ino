@@ -35,23 +35,7 @@ void incomingRadio() {
           //Serial.println(arr[i]);
         }
       }
-      else if (arr[0] == 2)
-      {
-        for (int i = 0; i < index; i++)              // move values from arr to the Docking Array
-        {
-          dockingArray[i] = arr[i];
-          //Serial.println(arr[i]);
-          dockingRegion = dockingArray[1];
-          desiredHeading = dockingArray[2];
-        }
-      }
     }
-    /*
-      else
-      {
-      Serial.println("Receive failed");
-      }
-    */
     if (manualControllerArray[1] == 1)
     {
       controllerMode = true;
@@ -59,3 +43,4 @@ void incomingRadio() {
 
   }
 }
+
