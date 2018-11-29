@@ -84,7 +84,7 @@ int SonarSensor_Front_Back(int trigPin, int echoPin) {
   delayMicroseconds(500); //trigger delay for reduced interference
   digitalWrite(trigPin, LOW);
 
-  duration = pulseIn(echoPin, HIGH);
+  duration = pulseIn(echoPin, HIGH); //timeout is defualt 1 second add pulseIn(pin, HIGH/LOW, timeout) for specified time out
   distance_front_back = (duration / CalibrationFactor);
   delayMicroseconds(5); //helps make the distance readings more stable
   
