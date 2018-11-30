@@ -614,13 +614,15 @@ void loop()
 
       // Run DCM algorithm
       Compass_Heading(); // Calculate magnetic heading
+      
+      mag_Map();
+      
       Matrix_update();
       Normalize();
       Drift_correction();
       Euler_angles();
 
-      mag_Map();
-      //accelerometer_NED();
+      accelerometer_NED();
      
       if (output_stream_on || output_single_on) output_acc_NED();
     }
