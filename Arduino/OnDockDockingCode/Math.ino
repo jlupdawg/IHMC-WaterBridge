@@ -1,4 +1,4 @@
-//We want to get the boat in section A where both sensors can find it
+//We want to get the boat in section A where both sonar sensors can find it
 //And theta and alpha and therefore desired heading can be found
 //If it is not in section A, we must get it in section A
 //Section A is the general region where both sensors can sense the boat

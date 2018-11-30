@@ -41,12 +41,7 @@ int regionVariable; //zone number that is sent through radio
 #define RFM95_RST 2   // "D"
 #define RFM95_INT 3   // "B"
 /****************************************************** Output Variables *************************************************/
-int xAxis = 0; //Joystick x axis value
-byte xPin = A0; // Joystick x axis input pin
-int yAxis = 0;
-byte yPin = A1;
-byte buttonNumber = 0;
-byte buttonPin = 7;
+
 byte nodeNumber = 3; //defines which device is communicating with the master, 3 IS THE DOCK!!!!! 
 
 /************************************************************************************************************************/
@@ -60,7 +55,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 
 void setup() {
-  //calibrationFactorCalculation();
+  //CalibrationFactorCalculation(); //no thermistor on dock yet
 /*************SONAR SETUP*****************************************************************************************************/
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
