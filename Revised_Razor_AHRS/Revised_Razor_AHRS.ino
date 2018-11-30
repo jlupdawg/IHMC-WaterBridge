@@ -619,7 +619,8 @@ void loop()
       Drift_correction();
       Euler_angles();
 
-      accelerometer_NED();
+      mag_Map();
+      //accelerometer_NED();
      
       if (output_stream_on || output_single_on) output_acc_NED();
     }
