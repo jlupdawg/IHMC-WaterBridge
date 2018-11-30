@@ -21,8 +21,9 @@ int sonarVar = 0; //switches between 0 and 1 to alternate between left and right
 /*********** Docking Calculation Setup ************************************************************/
 
 float alpha;
+float beta;
 float theta;
-float dockDirection = 60; //"heading" of dock (we should do this according to IMU!)
+float dockDirection = 285; //"heading" of dock (we should do this according to IMU!)
 float desiredHeading;
 
 bool signalReceived = true;
@@ -118,7 +119,6 @@ void setup() {
 void loop() {
   
   if (signalReceived && boatConfirmed){
-    Serial.println("WHAT");
     switch (sonarVar) {
       case 0:
           Sonar_S1();
@@ -140,7 +140,7 @@ void loop() {
       calculateDesiredHeading();
       }
     
-    //sendRadio();
+    sendRadio();
     }
     
   else if(signalReceived == true && boatConfirmed == false){
