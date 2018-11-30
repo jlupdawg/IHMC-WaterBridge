@@ -26,8 +26,8 @@ void Sonar_S1() {
       //IdentifyObject();
    // }
   
-  Serial.print("S1: "); Serial.print(distanceS1);
-  Serial.print(" S2: "); Serial.print(distanceS2);
+  //Serial.print("S1: "); Serial.print(distanceS1);
+  //Serial.print(" S2: "); Serial.print(distanceS2);
 }
 
 void Sonar_S2() {

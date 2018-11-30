@@ -10,18 +10,18 @@ void lawOfCosines(float a, float b, float c){
   //a is the magnitude of the reading from sensor 1
   //b is the magnitude of the reading from sensor 2
   //c is the distance between the sensors
-  Serial.print("Theta: "); Serial.println(theta);
+  //Serial.print("Theta: "); Serial.println(theta);
   }
 
 void findAlpha(){
   
   beta = distanceS1 * sin(theta * PI / 180) / distBetweenSensors;
   beta *= 180 / PI;
-  Serial.print("Beta: "); Serial.println(beta);
+  //Serial.print("Beta: "); Serial.println(beta);
    
   alpha = beta - 90;
   alpha = abs(alpha);
-  Serial.print("Alpha: "); Serial.println(alpha);
+  //Serial.print("Alpha: "); Serial.println(alpha);
   
   }
 
@@ -33,6 +33,6 @@ void calculateDesiredHeading(){
   else if (beta < 90){
     desiredHeading = dockDirection;
     }
-   Serial.print("Desired heading: "); Serial.println(desiredHeading);
+   //Serial.print("Desired heading: "); Serial.println(desiredHeading);
   
   }

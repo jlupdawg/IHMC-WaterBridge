@@ -47,7 +47,7 @@ void DockingMechanism() {
       case 4:
         //Region D
         //Stop
-        setMotors_dock(0, 0);
+        //setMotors_dock(0, 0);
         break;
       case 5:
         //Region E

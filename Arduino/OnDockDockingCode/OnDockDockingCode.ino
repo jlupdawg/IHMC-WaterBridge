@@ -62,20 +62,6 @@ void setup() {
   while (!Serial){
     delay(1);
   }
-/*************RADIO SETUP*****************************************************************************************************/
-
-// Change to 434.0 or other frequency, must match RX's freq!
-
-// Singleton instance of the radio driver
-  #define RFM95_CS  4    // "E"
-  #define RFM95_RST 2   // "D"
-  #define RFM95_INT 3   // "B"
-  
-  
-  #define RF95_FREQ 915.0
-  
-  // Singleton instance of the radio driver
-  RH_RF95 rf95(RFM95_CS, RFM95_INT);
 /************************************************* This bit is initalizing the radio *****************************/
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
