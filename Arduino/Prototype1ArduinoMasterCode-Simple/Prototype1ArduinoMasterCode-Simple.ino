@@ -112,9 +112,14 @@ int leftMotorValue = 0;
 int rightMotorValue = 0;
 Servo leftMotor;
 Servo rightMotor;
-int minSpeed = 1100;
+
+int percentage = 10;
+
+//int minSpeed = 1100;
 int stopSpeed = 1500;
-int maxSpeed = 1900;
+//int maxSpeed = 1900;
+int minSpeed = stopSpeed - (400 * percentage/100);
+int maxSpeed = (400 * percentage/100) + stopSpeed;
 
 bool dockingMode = false;
 
