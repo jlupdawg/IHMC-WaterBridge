@@ -105,8 +105,8 @@ void setMotors_Controller()
   }
 
 
-  leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
-  rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
+  //leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
+  //rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
 
   leftMotor.writeMicroseconds(leftMotorValue);
   rightMotor.writeMicroseconds(rightMotorValue);
