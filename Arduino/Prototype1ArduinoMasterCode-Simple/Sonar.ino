@@ -6,6 +6,10 @@ void SonarSensor_Front_Back(double CalibrationFactor) {
 
 void Object_Location() {
 
+  int difference = 0;
+  int tolerance = 20;
+  avoid = false;
+
   if (leftMotorValue == 1500 && rightMotorValue == 1500) {
     f1 = SonarSensor_Front_Back(Pin4_2, Pin2_1);
     b1 = SonarSensor_Front_Back(Pin4_2, Pin2_2);
@@ -14,48 +18,59 @@ void Object_Location() {
   if (leftMotorValue > 1500 && rightMotorValue > 1500) {
     f1 = SonarSensor_Front_Back(Pin4_2, Pin2_1);
 
-    if (f1 <= 20) {
+    if (f1 <= obstical_distance) {
+      avoid = true;
       s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
       s2 = SonarSensor_Corner(trigPin_2, echoPin_2);
-
-      if (s1 < s2) {
+      difference = s2 - s1;
+      if (difference > tolerance) {
         Direction = 1; // 1 equals Left
       }
 
-      else if (s2 < s1) {
+      else if (difference < -tolerance) {
         Direction = 0; //0 equals Right
       }
       else {
         Direction = 2; // 2 equals centered
       }
-    }
-    else {
-      s1 = s2 = 0;
+      if (Direction != 2)
+      {
+        setMotors_Sonar();
+
+      }
+      else {
+        s1 = s2 = 0;
+      }
     }
   }
   if (leftMotorValue < 1500 && rightMotorValue < 1500) {
     b1 = SonarSensor_Front_Back(Pin4_2, Pin2_2);
 
-    if (b1 <= 20) {
+    if (b1 <= obstical_distance) {
+      avoid = true;
       s3 = SonarSensor_Corner(trigPin_3, echoPin_3);
       s4 = SonarSensor_Corner(trigPin_4, echoPin_4);
-
-      if (s3 < s4) {
+      difference = s4 - s3;
+      if (difference > tolerance) {
         Direction = 0;
       }
 
-      else if (s4 < s3) {
+      else if (difference < -tolerance) {
         Direction = 1;
       }
 
       else {
         Direction = 2;
       }
+
+      setMotors_Sonar();
+
     }
     else {
       s3 = s4 = 0;
     }
   }
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -87,7 +102,7 @@ int SonarSensor_Front_Back(int trigPin, int echoPin) {
   duration = pulseIn(echoPin, HIGH);
   distance_front_back = (duration / CalibrationFactor);
   delayMicroseconds(5); //helps make the distance readings more stable
-  
+
   return distance_front_back;
 }
 

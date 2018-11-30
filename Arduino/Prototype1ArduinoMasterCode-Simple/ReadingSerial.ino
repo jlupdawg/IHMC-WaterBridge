@@ -47,7 +47,6 @@ void printInByte()
       inByte[i][1] = inByte[i][0];                            //updates input values
       //Serial.print("Input "); Serial.print(i + 1); Serial.print(" = "); Serial.println(inByte[i][1]);  //prints input data
     }
-    Serial.println();
   }
   else
   {

@@ -67,7 +67,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 /************************************ Serial Communication **************************************/
 char inputString[50];            // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
-const int numberOfInputs = 4;    // number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
+const int numberOfInputs = 3;    // number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
 int inByte[numberOfInputs][2];   // decoded serial communication 2D array for comparison of previous values
 char *inputs[numberOfInputs];    // raw serial communication
 /************************************************************************************************/
@@ -89,14 +89,6 @@ double AmbientTemp; //Celcius
 
 /************************************************************************************************/
 
-/***************************************** Docking **********************************************/
-
-int dockingArray[4] = {
-  0, 0, 0, 0
-}; //node, inRange (high / low), leftSonar, rightSonar
-int dockingStatus = 0;
-
-/************************************************************************************************/
 /***************************************** Logging **********************************************/
 
 unsigned long currentMillis = millis();
@@ -105,7 +97,7 @@ int timerThreshold = 1000;
 
 /************************************************************************************************/
 
-/***************************************** LCD Write ********************************************/
+/***************************************** LCD Setup ********************************************/
 
 LiquidCrystal lcd(30, 32, 22, 24, 26, 28);
 
@@ -128,25 +120,27 @@ bool dockingMode = false;
 
 /************************************************************************************************/
 
-/*************************************** Sonar Setup ********************************************
+/*************************************** Sonar Setup ********************************************/
 //Pins for Corner Sonar sensors
-#define trigPin_1 13
-#define echoPin_1 4
-#define trigPin_2 10
-#define echoPin_2 9
-#define trigPin_3 7
-#define echoPin_3 8
-#define trigPin_4 12
-#define echoPin_4 11
+#define trigPin_1 21
+#define echoPin_1 23
+#define trigPin_2 25
+#define echoPin_2 27
+#define trigPin_3 29
+#define echoPin_3 31
+#define trigPin_4 33
+#define echoPin_4 35
 
 //Pins for Front and Back sonar sensors
 //#define (Pin-On-Sensor)_(Sensor-Number) (Pin-On-Arduino)
-#define Pin2_1 3
-#define Pin2_2 5
-#define Pin4_2 2 //trigger pin for both Front and Back Sensors
-*/
+#define Pin2_1 37
+#define Pin2_2 39
+#define Pin4_2 41 //trigger pin for both Front and Back Sensors
+
 double duration, distance_corner, distance_front_back, s1, s2, s3, s4, f1, b1;
 double CalibrationFactor;
+bool avoid = false;
+int obstical_distance = 100;
 
 /************************************************************************************************/
 
@@ -193,8 +187,8 @@ void setup() {
   /***************************************************************************************************************/
   leftMotor.attach(leftMotorPin);
   rightMotor.attach(rightMotorPin);
-  leftMotor.writeMicroseconds(1500);
-  rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
+  leftMotor.writeMicroseconds(stopSpeed);
+  rightMotor.writeMicroseconds(stopSpeed); // send "stop" signal to ESC.
   delay(1000); // delay to allow the ESC to recognize the stopped signal
 
 
@@ -204,11 +198,12 @@ void loop() {
 
   //Serial.println("Begin");
 
-  if ((controllerMode == false))  //must reset the master board after putting the boat in controllerMode. This is intentional
+  if ((controllerMode == false))   //must reset the master board after putting the boat in controllerMode. This is intentional
   {
-    incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
+    incomingRadio();               // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();                  // check incoming serial communication
-    printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
+    printInByte();                 // print Inbyte and decide on whether or not the motors should be updated and prints the value
+    Object_Location();             // if an object is detected, this function will keep the motors from updating by serial until the obstical is avoided
     if (updateMotors)
     {
       setMotors_Serial();                 // set the motors with pwm pin values
@@ -217,17 +212,12 @@ void loop() {
     }
     loggingData("Normal");
   }
-  else if (controllerMode == true)   //Only perform tasks necessary to manually control the boat
+  else if (controllerMode == true  || dockingMode == true)   //Only perform tasks necessary to manually control the boat
   {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     setMotors_Controller();
-    //Serial.println("Controller Mode");
     loggingData("Controller Mode");
   }
-
-
-  /***********************************************************************************SONAR LOOP CODE************************************************************************************************/
-
-  //Object_Location();
+  
 
 }
