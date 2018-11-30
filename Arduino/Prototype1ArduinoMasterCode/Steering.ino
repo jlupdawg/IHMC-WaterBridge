@@ -1,23 +1,34 @@
 void changeHeading(){
   
-  if(currentHeading<desiredHeading){
-    
-    
-    
+  /*if(currentHeading<desiredHeading){
+    incrementMotors(-.01, .01);
     }
 
   else if(currentHeading>desiredHeading){
+    incrementMotors(.01, -.01);
+    }*/
+    float difference;
+    difference = currentHeading - desiredHeading;
+    if (abs(difference) > 180){
+      if(difference>0){
+        difference -= 360;
+        }
+      else{
+        difference +=360;
+        }
+      }
     
     
-    
-    }
-  
+    if(difference > 180){
+      difference = -difference;
+      }
+    incrementMotors((-difference)/5000, (difference)/5000); //increment both motors by a factor relating to the difference in heading
   }
 
 void checkDist(){
   
   if(sonarDist1 < dockingValue || sonarDist2 < dockingValue){
-    //stopMotors();
+    setMotors_dock(0,0);
     boatDocked = true;
     }
   

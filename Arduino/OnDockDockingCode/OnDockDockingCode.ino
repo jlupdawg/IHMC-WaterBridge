@@ -4,29 +4,28 @@
 
 /*********** Sonar Setup ************************************************************/
 
-#define EchoPinS1 1
-#define EchoPinS2 2
-#define TrigPinS1 11
-#define TrigPinS2 12
+#define EchoPinS1 31
+#define EchoPinS2 25
+#define TrigPinS1 29
+#define TrigPinS2 23
 
 double S1_Duration, S2_Duration;
 float distanceS1;
 float distanceS2;
-float distBetweenSensors = 1; //distance in meters between S1 and S2
+float distBetweenSensors = 75; //distance in cm between S1 and S2
 float detectDist = 1500; //Minimum distance from each sonar to consider an object "detected"
 float AmbientTemp;
-float CalibrationFactor;
-float duration;
+float CalibrationFactor = 58.3;
 int sonarVar = 0; //switches between 0 and 1 to alternate between left and right sensors
 
 /*********** Docking Calculation Setup ************************************************************/
 
 float alpha;
 float theta;
-float dockDirection; //"heading" of dock (we should do this according to IMU!)
+float dockDirection = 60; //"heading" of dock (we should do this according to IMU!)
 float desiredHeading;
 
-bool signalReceived = false;
+bool signalReceived = true;
 bool boatConfirmed = true; //We absolutely do not need this for the pool
 bool dockingMode;
 int regionVariable; //zone number that is sent through radio
@@ -62,8 +61,6 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 void setup() {
   //calibrationFactorCalculation();
 /*************SONAR SETUP*****************************************************************************************************/
-  pinMode(RFM95_RST, OUTPUT);
-  digitalWrite(RFM95_RST, HIGH);
 
   Serial.begin(115200);
   while (!Serial){
@@ -115,18 +112,26 @@ void setup() {
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
 
+  pinMode(31, INPUT);
+  pinMode(29, OUTPUT);
+  pinMode(25, INPUT);
+  pinMode(23, OUTPUT);
+
     
 }
 
 void loop() {
   
   if (signalReceived && boatConfirmed){
+    Serial.println("WHAT");
     switch (sonarVar) {
       case 0:
           Sonar_S1();
+          sonarVar = 1;
           break;
       case 1:
           Sonar_S2();
+          sonarVar = 0;
           break;
       default:
           //error
@@ -134,11 +139,13 @@ void loop() {
     }
     findRegion(); //check to see if A, B, C, or D
     
-    lawOfCosines(distanceS1, distanceS2, distBetweenSensors);
-    findAlpha();
-    calculateDesiredHeading();
+    if(regionVariable == 1){
+      lawOfCosines(distanceS1, distanceS2, distBetweenSensors);
+      findAlpha();
+      calculateDesiredHeading();
+      }
     
-    sendRadio();
+    //sendRadio();
     }
     
   else if(signalReceived == true && boatConfirmed == false){
@@ -158,4 +165,5 @@ void loop() {
   if(S2_Duration != 0){
       dockingMode = 1;
     }*/
+    delay(300);
 }

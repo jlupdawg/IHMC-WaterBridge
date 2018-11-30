@@ -1,7 +1,7 @@
 /***********SONAR*******************************************************************************************/
 float sonarDist1; //holds the distances sensed by the dock sonars
 float sonarDist2;
-float dockingValue; //the closest distance we want to get to the sonars before stopping
+float dockingValue = 20; //the closest distance we want to get to the sonars before stopping
 
 /***********HEADING*****************************************************************************************/
 float headingError; //Potentially get rid of this if using incrementing method
@@ -9,7 +9,7 @@ float desiredHeading;
 float currentHeading;
 
 /***********DOCKING****************************************************************************************/
-boolean verifiedBoat; //stores whether the boat has confirmed that it is the object returning sonar pulses
+boolean verifiedBoat = true; //stores whether the boat has confirmed that it is the object returning sonar pulses
 //boolean dockingMode = false;
 boolean boatDocked; //stores whether or not the dock has completed docking
 
@@ -37,18 +37,22 @@ void DockingMechanism() {
       case 2:
         //Region B
         // Turn right
-        setMotors_dock(30, 10); //DISCUSS AND CHANGE THESE VALUES
+        setMotors_dock(0, 2); //DISCUSS AND CHANGE THESE VALUES
         break;
       case 3:
         //Region C
         //Turn left
-        setMotors_dock(10, 30); //DISCUSS AND CHANGE THESE VALUES
+        setMotors_dock(2, 0); //DISCUSS AND CHANGE THESE VALUES
         break;
       case 4:
         //Region D
         //Stop
         setMotors_dock(0, 0);
         break;
+      case 5:
+        //Region E
+        //Go forward
+        setMotors_dock(2, 2);
       default:
         //error
         break;

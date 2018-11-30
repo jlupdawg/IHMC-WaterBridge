@@ -14,72 +14,74 @@ void CalibrationFactorCalculation() {
 
 void Sonar_S1() {
 
-  digitalWrite(TrigPinS1, LOW);
-  delayMicroseconds(5); //Allows for the sound reflection to disipate before re-firing the sonar, it cleans up the interference
-
   digitalWrite(TrigPinS1, HIGH);
-  delayMicroseconds(10); //Allows sound to travel to destination and back
-
+  delayMicroseconds(50); //trigger delay for reduced interference
   digitalWrite(TrigPinS1, LOW);
 
-  duration = pulseIn(EchoPinS1, HIGH);
-  distanceS1 = (duration / CalibrationFactor);
+  S1_Duration = pulseIn(EchoPinS1, HIGH);
+  distanceS1 = (S1_Duration / CalibrationFactor);
+  delayMicroseconds(5); //helps make the distance readings more stable
 
-  if(distanceS1 < 2000){
-      IdentifyObject();
-    }
+  //if(distanceS1 < 2000){
+      //IdentifyObject();
+   // }
+  
+  Serial.print("S1: "); Serial.print(distanceS1);
+  Serial.print(" S2: "); Serial.print(distanceS2);
 }
 
 void Sonar_S2() {
 
-  digitalWrite(TrigPinS2, LOW);
-  delayMicroseconds(5); //Allows for the sound reflection to disipate before re-firing the sonar, it cleans up the interference
-
   digitalWrite(TrigPinS2, HIGH);
-  delayMicroseconds(10); //Allows sound to travel to destination and back
-
+  delayMicroseconds(50); //trigger delay for reduced interference
   digitalWrite(TrigPinS2, LOW);
 
-  duration = pulseIn(EchoPinS2, HIGH);
-  distanceS2 = (duration / CalibrationFactor);
+  S2_Duration = pulseIn(EchoPinS2, HIGH);
+  distanceS2 = (S2_Duration / CalibrationFactor);
+  delayMicroseconds(5); //helps make the distance readings more stable
 
-    if(distanceS2 < 2000){
-      IdentifyObject();
-    }
+    //if(distanceS2 < 2000){
+      //IdentifyObject();
+    //}
 }
 
-void IdentifyObject(){
+/*void IdentifyObject(){
 //Sends out a sonar pulse
 //Sends boat radio signal to listen for pulse
 //Dock waits for transmission back that pulse was recieved
 
   digitalWrite(TrigPinS2, HIGH);
-  sendRadio(); //send message to be sent to function sendRadio()
+  //sendRadio(); //send message to be sent to function sendRadio()
   delay(2); //Sends out 2 second pulse allowing time for boat to recieve pulse
   digitalWrite(TrigPinS2, LOW); //terminated pulse
     
   
   }
-
-void calibrationFactorCalculation(){
-  //Jacob what is this for?
-  }
-
+*/
 void findRegion(){
   if(distanceS1 < detectDist && distanceS2 < detectDist){
     //Zone A
     regionVariable=1;
+    Serial.println("A");
     }
-  if(distanceS1 < detectDist && distanceS2 >= detectDist){
+  else if(distanceS1 < detectDist && distanceS2 >= detectDist){
     //Zone B
     regionVariable=2;
+    Serial.println("B");
     }
-  if(distanceS2 < detectDist && distanceS1 >= detectDist){
+  else if(distanceS2 < detectDist && distanceS1 >= detectDist){
     //Zone C
     regionVariable=3;
+    Serial.println("C");
     }
-  if(distanceS1 >= detectDist && distanceS2 >= detectDist){
+  else if(distanceS1 >= detectDist && distanceS2 >= detectDist){
     //Zone D
     regionVariable=4;
+    Serial.println("D");
+    }
+  else{
+    //Zone D
+    regionVariable=5;
+    Serial.println("E");
     }
   }
