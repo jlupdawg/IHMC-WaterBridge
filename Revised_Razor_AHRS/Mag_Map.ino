@@ -13,7 +13,10 @@ void mag_Map(){
   else if(average_MAG_Heading <= 260){
     average_MAG_Heading = map(average_MAG_Heading, 170, 260, 225, 270);
     }
+  else if(average_MAG_Heading <= 315){
+    average_MAG_Heading = map(average_MAG_Heading, 260, 315, 270, 315);
+  }
   else if(average_MAG_Heading <= 360){
-    average_MAG_Heading = map(average_MAG_Heading, 260, 360, 270, 360);
+    average_MAG_Heading = map(average_MAG_Heading, 315, 360, 315, 360);
     }
   }
