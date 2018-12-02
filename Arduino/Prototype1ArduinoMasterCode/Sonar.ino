@@ -1,3 +1,4 @@
+/*
 float f1;
 float b1;
 float s1;
@@ -21,7 +22,7 @@ float echoPin_3;
 float echoPin_4;
 //I INITIALIZED THESE VARIABLES HERE SO THE CODE WILL VERIFY/COMPILE
 //PLEASE MOVE THE VARIABLES HERE FROM WHEREVER YOU COPIED THEM FROM
-
+*/
 void SonarSensor_Front_Back(double CalibrationFactor) {
   CalibrationFactor = CalibrationFactor;
 }
@@ -31,12 +32,12 @@ void SonarSensor_Front_Back(double CalibrationFactor) {
 void Object_Location() {
 
   if (leftMotorValue == 1500 && rightMotorValue == 1500) {
-    f1 = SonarSensor_Front_Back(Pin4_2, Pin2_1);
-    b1 = SonarSensor_Front_Back(Pin4_2, Pin2_2);
+    f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+    b1 = SonarSensor_Front_Back(pinB_4, pinB_2);
   }
 
   if (leftMotorValue > 1500 && rightMotorValue > 1500) {
-    f1 = SonarSensor_Front_Back(Pin4_2, Pin2_1);
+    f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
 
     if (f1 <= 20) {
       s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
@@ -58,7 +59,7 @@ void Object_Location() {
     }
   }
   if (leftMotorValue < 1500 && rightMotorValue < 1500) {
-    b1 = SonarSensor_Front_Back(Pin4_2, Pin2_2);
+    b1 = SonarSensor_Front_Back(pinB_4, pinB_2);
 
     if (b1 <= 20) {
       s3 = SonarSensor_Corner(trigPin_3, echoPin_3);

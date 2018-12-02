@@ -113,7 +113,7 @@ int rightMotorValue = 0;
 Servo leftMotor;
 Servo rightMotor;
 
-int percentage = 10;
+int percentage = 20;
 
 //int minSpeed = 1100;
 int stopSpeed = 1500;
@@ -188,7 +188,7 @@ void setup() {
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
   /***************************************************************************************************************/
-
+  
   /***************************************************************************************************************/
   leftMotor.attach(leftMotorPin);
   rightMotor.attach(rightMotorPin);

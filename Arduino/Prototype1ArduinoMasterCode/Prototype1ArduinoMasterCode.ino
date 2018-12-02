@@ -120,30 +120,36 @@ int leftMotorValue = 0;
 int rightMotorValue = 0;
 Servo leftMotor;
 Servo rightMotor;
-int minSpeed = 1100;
+
+int percentage = 20;
+
+//int minSpeed = 1100;
 int stopSpeed = 1500;
-int maxSpeed = 1900;
+//int maxSpeed = 1900;
+int minSpeed = stopSpeed - (400 * percentage/100);
+int maxSpeed = (400 * percentage/100) + stopSpeed;
+
 
 bool dockingMode = false;
 
 /************************************************************************************************/
 
-/*************************************** Sonar Setup ********************************************
+/*************************************** Sonar Setup ********************************************/
 //Pins for Corner Sonar sensors
-#define trigPin_1 13
-#define echoPin_1 4
-#define trigPin_2 10
-#define echoPin_2 9
-#define trigPin_3 7
-#define echoPin_3 8
-#define trigPin_4 12
-#define echoPin_4 11
+#define trigPin_1 41
+#define echoPin_1 39
+#define trigPin_2 21
+#define echoPin_2 23
+#define trigPin_3 25
+#define echoPin_3 27
+#define trigPin_4 37
+#define echoPin_4 35
 
 //Pins for Front and Back sonar sensors
 //#define (Pin-On-Sensor)_(Sensor-Number) (Pin-On-Arduino)
-#define Pin2_1 3
-#define Pin2_2 5
-#define Pin4_2 2 //trigger pin for both Front and Back Sensors
+#define pinF_2 29
+#define pinB_2 31
+#define pinB_4 33
 
 double duration, distance_corner, distance_front_back, s1, s2, s3, s4, f1, b1;
 double CalibrationFactor;
@@ -197,7 +203,18 @@ void setup() {
   rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
   delay(1000); // delay to allow the ESC to recognize the stopped signal
 
+  pinMode(trigPin_1, OUTPUT);
+  pinMode(trigPin_2, OUTPUT);
+  pinMode(trigPin_3, OUTPUT);
+  pinMode(trigPin_4, OUTPUT);
+  pinMode(pinB_4, OUTPUT);
 
+  pinMode(echoPin_1, INPUT);
+  pinMode(echoPin_2, INPUT);
+  pinMode(echoPin_3, INPUT);
+  pinMode(echoPin_4, INPUT);
+  pinMode(pinF_2, INPUT);
+  pinMode(pinB_2, INPUT);
 }
 
 void loop() {
