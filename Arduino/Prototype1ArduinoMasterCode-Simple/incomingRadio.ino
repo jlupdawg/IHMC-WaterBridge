@@ -1,5 +1,5 @@
 void incomingRadio() {
-
+  
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]; //create a buffer to add the message to
   uint8_t len = sizeof(buf); //create a variable that is the length of buf
   if (rf95.available()) {
@@ -35,38 +35,12 @@ void incomingRadio() {
           //Serial.println(arr[i]);
         }
       }
-      else if (arr[0] == 2)
-      {
-        for (int i = 0; i < index; i++)              // move values from arr to the Docking Array
-        {
-          dockingArray[i] = arr[i];
-          //Serial.println(arr[i]);
-          dockingRegion = dockingArray[1];
-          desiredHeading = dockingArray[2];
-        }
-      }
     }
-    /*
-      else
-      {
-      Serial.println("Receive failed");
-      }
-    */
     if (manualControllerArray[1] == 1)
     {
       controllerMode = true;
     }
-    if (manualControllerArray[1] == 1 && manualControllerArray[2] > 1000)
-    {
-      controllerModeHard = true;
-    }
-    if (manualControllerArray[1] == 1 && manualControllerArray[2] < 200)
-    {
-      manualControllerArray[2] = 514;
-      manualControllerArray[3] = 514;
-      controllerMode = false;
-
-    }
 
   }
 }
+

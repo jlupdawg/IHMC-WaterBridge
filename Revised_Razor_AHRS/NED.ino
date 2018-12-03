@@ -20,7 +20,5 @@ void output_acc_NED(){
   SerialPort.print(aEast); SerialPort.print(", ");
   SerialPort.print(aDown); SerialPort.println(", "); SerialPort.println(" ");
 
-  SerialPort.print("Heading: "); SerialPort.print(average_MAG_Heading * 180 / PI ); SerialPort.println(" ");
-
-  delay(100);
+  SerialPort.print("Heading: "); SerialPort.print(average_MAG_Heading); SerialPort.println(" ");
   }

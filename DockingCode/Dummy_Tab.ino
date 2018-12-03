@@ -1,5 +1,0 @@
-getCurrentHeading(){
-  
-  
-  
-  }

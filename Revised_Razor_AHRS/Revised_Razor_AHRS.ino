@@ -108,6 +108,7 @@ MPU9250_DMP imu;
 #define OUTPUT__MODE_SENSORS_RAW 3 // Outputs raw (uncalibrated) sensor values for all 9 axes
 #define OUTPUT__MODE_SENSORS_BOTH 4 // Outputs calibrated AND raw sensor values for all 9 axes
 #define OUTPUT__MODE_NED 5 //Outputs heading and accelerometer in NED coordinates
+#define OUTPUT__DOCK_HEADING 6
 // Output format definitions (do not change)
 #define OUTPUT__FORMAT_TEXT 0 // Outputs data as text
 #define OUTPUT__FORMAT_BINARY 1 // Outputs data as binary float
@@ -163,8 +164,8 @@ boolean output_errors = false;  // true or false
 // Uncomment to use extended magnetometer calibration (compensates hard & soft iron errors)
 // Use your own calibration values! The values below were for my board!
 #define CALIBRATION__MAGN_USE_EXTENDED true
-const float magn_ellipsoid_center[3] = { 92.6286, 248.944, 65.2124 };
-const float magn_ellipsoid_transform[3][3] = { { 0.996647, -0.00682284, .006692321 },{ -0.00682284, -0.975816, -0.00290477 },{ 0.00669321, -0.00290477, 0.960128 } };
+const float magn_ellipsoid_center[3] = { 40.15538, 176.96, 65.63616 };
+const float magn_ellipsoid_transform[3][3] = { { .988574, .001698375, .014101 },{ .002287985, -.998287, .000262 },{ 0.014101, .000262, .967413 } };
 
 // Gyroscope
 // "gyro x,y,z (current/average) = .../OFFSET_X  .../OFFSET_Y  .../OFFSET_Z
@@ -239,6 +240,10 @@ float roll_readings[numReadings2];
 float total_pitch = 0.0;
 float average_pitch = 0.0;
 float pitch_readings[numReadings2];
+
+/************Dock Heading**************/
+int numHead;
+float headingAvg;
 
 
 // Sensor variables
@@ -465,8 +470,14 @@ void loop()
 	// Read incoming control messages
 	if (SerialPort.available() >= 2)
 	{
+  Serial.print("work");
 		if (SerialPort.read() == '#') // Start of new control message
 		{
+
+      numHead = 0; //used for dock_Heading
+      headingAvg = 0;
+      
+    
 			int command = SerialPort.read(); // Commands
 			if (command == 'f') // request one output _f_rame
 				output_single_on = true;
@@ -535,6 +546,8 @@ void loop()
           output_mode = OUTPUT__MODE_NED;
           output_format = OUTPUT__FORMAT_TEXT;
           }
+        else if (output_param == 'd'){
+          output_mode = OUTPUT__DOCK_HEADING;          }
 				else if (output_param == 'e') // _e_rror output settings
 				{
 					char error_param = readChar();
@@ -601,6 +614,9 @@ void loop()
 
       // Run DCM algorithm
       Compass_Heading(); // Calculate magnetic heading
+      
+      mag_Map();
+      
       Matrix_update();
       Normalize();
       Drift_correction();
@@ -610,6 +626,15 @@ void loop()
      
       if (output_stream_on || output_single_on) output_acc_NED();
     }
+    else if (output_mode == OUTPUT__DOCK_HEADING){
+      Compass_Heading(); // Calculate magnetic heading
+      Matrix_update();
+      Normalize();
+      Drift_correction();
+      Euler_angles();
+
+      dock_Heading();
+      }
 		else  // Output sensor values
 		{
 			if (output_stream_on || output_single_on) output_sensors();

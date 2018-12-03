@@ -1,18 +1,19 @@
 #include <math.h>
 
-#define trigPin_1 13
-#define echoPin_1 4
-#define trigPin_2 10
-#define echoPin_2 9
-#define trigPin_3 7
-#define echoPin_3 8
-#define trigPin_4 12
-#define echoPin_4 11
-
+#define trigPin_1 41
+#define echoPin_1 39
+#define trigPin_2 21
+#define echoPin_2 23
+#define trigPin_3 25
+#define echoPin_3 27
+#define trigPin_4 37
+#define echoPin_4 35
+// 5 6 11
 //#define (Pin-On-Sensor)_(Sensor-Number) (Pin-On-Arduino)
-#define Pin2_1 3
-#define Pin2_2 5
-#define Pin4_2 2 //trigger pin for both Front and Back Sensors
+#define Pin2_1 5
+#define Pin2_2 6
+#define Pin4_2 11 //trigger pin for both Front and Back Sensors
+
 
 double duration, distance_corner, distance_front_back, s1, s2, s3, s4, f1, b1;
 double CalibrationFactor;
@@ -30,6 +31,7 @@ void setup () {
   pinMode(Pin2_1, INPUT);
   pinMode(Pin2_2, INPUT);
   pinMode(Pin4_2, OUTPUT); //Using pin 2 for triggering asymetric firing of front and back sonar sensor.
+  //pinMode(Pin4_1, OUTPUT);
   CalibrationFactor = CalibrationFactorCalculation(); //Approx. around 58
   SonarSensor_Front_Back(CalibrationFactor);
   SonarSensor_Corner(CalibrationFactor);
