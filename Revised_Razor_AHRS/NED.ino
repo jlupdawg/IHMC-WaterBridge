@@ -16,9 +16,9 @@ void accelerometer_NED(){
 
 void output_acc_NED(){
   
-  SerialPort.print("NED Acceleration: "); SerialPort.print(aNorth); SerialPort.print(", ");
+  /*SerialPort.print("NED Acceleration: "); SerialPort.print(aNorth); SerialPort.print(", ");
   SerialPort.print(aEast); SerialPort.print(", ");
-  SerialPort.print(aDown); SerialPort.println(", "); SerialPort.println(" ");
+  SerialPort.print(aDown); SerialPort.println(", "); SerialPort.println(" ");*/
 
-  SerialPort.print("Heading: "); SerialPort.print(average_MAG_Heading); SerialPort.println(" ");
+  /*SerialPort.print("Heading: ");*/ SerialPort.println(average_MAG_Heading); //SerialPort.println(" ");
   }
