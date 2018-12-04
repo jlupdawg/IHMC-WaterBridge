@@ -67,8 +67,11 @@ void setMotors_Controller()
   leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
   rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
 
-  leftMotor.writeMicroseconds(leftMotorValue);
-  rightMotor.writeMicroseconds(rightMotorValue);
+
+  int adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+  int adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+  leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+  rightMotor.writeMicroseconds(adjustedRightMotorValue);
   //Serial.print("Left Motor = "); Serial.println(leftMotorValue);
   //Serial.print("Right Motor = "); Serial.println(rightMotorValue);
   //delay(100);
@@ -84,7 +87,53 @@ void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal){
   leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
   rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
 
-  leftMotor.writeMicroseconds(leftMotorValue);
-  rightMotor.writeMicroseconds(rightMotorValue);
+
+  int adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+  int adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+  leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+  rightMotor.writeMicroseconds(adjustedRightMotorValue);
+
+}
+
+void setMotors_Sonar()
+{
+  if (Direction == 0 || Direction == 2) //Turn Right
+  {
+    leftMotorValue = maxSpeed;
+    rightMotorValue = minSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(300);
+    leftMotorValue = maxSpeed;
+    rightMotorValue = maxSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(300);
+    leftMotorValue = stopSpeed;
+    rightMotorValue = stopSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(300);
+  }
+  else if (Direction == 1) //Turn Left
+  {
+    leftMotorValue = minSpeed;
+    rightMotorValue = maxSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(300);
+    leftMotorValue = maxSpeed;
+    rightMotorValue = maxSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(300);
+    leftMotorValue = stopSpeed;
+    rightMotorValue = stopSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(100);
+  }
+
+  //Object_Location();
 
 }

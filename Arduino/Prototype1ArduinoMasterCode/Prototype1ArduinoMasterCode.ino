@@ -78,6 +78,7 @@ int manualControllerArray[4] = {
   0, 0, 0, 0
 };  //node, button, xValue, yValue
 bool controllerMode = false;
+bool controllerModeHard = false;
 
 /************************************************************************************************/
 
@@ -101,7 +102,7 @@ int dockingStatus = 0;
 
 unsigned long currentMillis = millis();
 unsigned long previousMillis = 0;
-int timerThreshold = 1000;
+int timerThreshold = 100;
 
 /************************************************************************************************/
 
@@ -121,13 +122,13 @@ int rightMotorValue = 0;
 Servo leftMotor;
 Servo rightMotor;
 
-int percentage = 20;
+int percentage = 15;
 
 //int minSpeed = 1100;
 int stopSpeed = 1500;
 //int maxSpeed = 1900;
-int minSpeed = stopSpeed - (400 * percentage/100);
-int maxSpeed = (400 * percentage/100) + stopSpeed;
+int minSpeed = stopSpeed - (400 * percentage / 100);
+int maxSpeed = (400 * percentage / 100) + stopSpeed;
 
 
 bool dockingMode = false;
@@ -147,12 +148,13 @@ bool dockingMode = false;
 
 //Pins for Front and Back sonar sensors
 //#define (Pin-On-Sensor)_(Sensor-Number) (Pin-On-Arduino)
-#define pinF_2 29
-#define pinB_2 31
-#define pinB_4 33
+#define pinF_2 5
+#define pinB_2 6
+#define pinB_4 11
 
-double duration, distance_corner, distance_front_back, s1, s2, s3, s4, f1, b1;
-double CalibrationFactor;
+double duration, distance_corner, distance_front_back = 3000, s1, s2, s3, s4, f1 = 3000, b1 = 3000;
+double CalibrationFactor = 58.3;
+int objectDetection;
 
 /************************************************************************************************/
 
@@ -168,7 +170,7 @@ void setup() {
   digitalWrite(RFM95_RST, HIGH);
   delay(100);
   Serial.println("Arduino LoRa RX Test!");
-  
+
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
@@ -180,18 +182,18 @@ void setup() {
     while (1);
   }
   Serial.println("LoRa radio init OK!");
- 
+
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   if (!rf95.setFrequency(RF95_FREQ)) {
     Serial.println("setFrequency failed");
     while (1);
   }
   Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
- 
+
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
- 
+
   // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
   /***************************************************************************************************************/
@@ -199,33 +201,39 @@ void setup() {
   /***************************************************************************************************************/
   leftMotor.attach(leftMotorPin);
   rightMotor.attach(rightMotorPin);
-  leftMotor.writeMicroseconds(1500);
-  rightMotor.writeMicroseconds(1500); // send "stop" signal to ESC.
+  leftMotorValue = stopSpeed;
+  rightMotorValue = stopSpeed;
+  //leftMotorValue = 1600;
+  //rightMotorValue = 1600;
+  leftMotor.writeMicroseconds(leftMotorValue);
+  rightMotor.writeMicroseconds(rightMotorValue); // send "stop" signal to ESC.
   delay(1000); // delay to allow the ESC to recognize the stopped signal
 
-  pinMode(trigPin_1, OUTPUT);
-  pinMode(trigPin_2, OUTPUT);
-  pinMode(trigPin_3, OUTPUT);
-  pinMode(trigPin_4, OUTPUT);
-  pinMode(pinB_4, OUTPUT);
 
+  /*************************************Sonar Pin Modes******************************************************/
+  pinMode(trigPin_1, OUTPUT);
   pinMode(echoPin_1, INPUT);
+  pinMode(trigPin_2, OUTPUT);
   pinMode(echoPin_2, INPUT);
+  pinMode(trigPin_3, OUTPUT);
   pinMode(echoPin_3, INPUT);
+  pinMode(trigPin_4, OUTPUT);
   pinMode(echoPin_4, INPUT);
   pinMode(pinF_2, INPUT);
   pinMode(pinB_2, INPUT);
+  pinMode(pinB_4, OUTPUT); //Using pin 2 for triggering asymetric firing of front and back sonar sensor.
 }
 
 void loop() {
 
   //Serial.println("Begin");
 
-  if ((controllerMode == false) && (dockingMode == false))  //must reset the master board after putting the boat in controllerMode. This is intentional
+  if ((controllerMode == false) && (dockingMode == false) && (objectDetection == 0))  //must reset the master board after putting the boat in controllerMode. This is intentional
   {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();                  // check incoming serial communication
     printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
+    Object_Location();
     if (updateMotors)
     {
       setMotors_Serial();                 // set the motors with pwm pin values
@@ -234,25 +242,39 @@ void loop() {
     }
     loggingData("Normal");
   }
+  else if (controllerModeHard == true)
+  {
+    incomingRadio();
+    setMotors_Controller();
+    loggingData("Controller Mode Hard");
+  }
+  else if (objectDetection == 1 && dockingMode == false) {
+    incomingRadio();
+    Object_Location();
+    setMotors_Sonar();
+    loggingData("Sonar");
+  }
   else if (controllerMode == true)   //Only perform tasks necessary to manually control the boat
   {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     setMotors_Controller();
+    Object_Location();
     //Serial.println("Controller Mode");
-    loggingData("Controller Mode");
+    loggingData("Controller");
   }
+
   else if (dockingMode == true)
   {
     /*incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-    readSerial();
-    dock();
-    setMotors_dock();
-    loggingData("Docking Mode");*/
+      readSerial();
+      dock();
+      setMotors_dock();
+      loggingData("Docking Mode");*/
     DockingMechanism();
+
   }
 
-  /***********************************************************************************SONAR LOOP CODE************************************************************************************************/
 
-  //Object_Location();
+  /***********************************************************************************SONAR LOOP CODE************************************************************************************************/
 
 }
