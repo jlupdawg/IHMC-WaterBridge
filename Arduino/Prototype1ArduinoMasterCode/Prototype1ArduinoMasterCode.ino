@@ -84,7 +84,32 @@ bool controllerModeHard = false;
 
 /*************************************** Sonar Setup ********************************************/
 
-int Direction = 3; //Left and Right are relative to the front sonar sensor/front of boat
+//Pins for Corner Sonar sensors
+#define trigPin_1 41
+#define echoPin_1 39
+#define trigPin_2 21
+#define echoPin_2 23
+#define trigPin_3 25
+#define echoPin_3 27
+#define trigPin_4 37
+#define echoPin_4 35
+
+//Pins for Front and Back sonar sensors
+#define pinF_2 5 //Front sonar echo pin
+#define pinB_2 6 //Back sonar echo pin
+#define pinB_4 11  //F_B sonar trigger pin
+
+double duration_corner, duration_front_back; //variable for microsecond values recorded from sonar values
+double distance_corner; //distance variable used in the corner sonar function
+double distance_front_back = 3000; //distance variable used in the front back sonar function
+double s1, s2, s3, s4; //corner sonar distance variables
+double f1 = 3000, b1 = 3000; //Out of range values, sonar will never read this high
+double watchCircleRadius = 106.5; //radius of circle around the boat, used for minimum allowable distance of objects to the center of the boat
+
+double CalibrationFactor = 58.3; //initialize as 58.3(STP factor) when thermisor not set up
+int objectIndicated, forward, backwards, notMoving; //Indicator variables
+
+int Direction = 3; //Left and Right are relative to the front sonar sensor(front of boat), 3 is not a direction indicator
 const int ThermistorPin = 0;
 double AmbientTemp; //Celcius
 
@@ -135,26 +160,6 @@ bool dockingMode = false;
 
 /************************************************************************************************/
 
-/*************************************** Sonar Setup ********************************************/
-//Pins for Corner Sonar sensors
-#define trigPin_1 41
-#define echoPin_1 39
-#define trigPin_2 21
-#define echoPin_2 23
-#define trigPin_3 25
-#define echoPin_3 27
-#define trigPin_4 37
-#define echoPin_4 35
-
-//Pins for Front and Back sonar sensors
-//#define (Pin-On-Sensor)_(Sensor-Number) (Pin-On-Arduino)
-#define pinF_2 5
-#define pinB_2 6
-#define pinB_4 11
-
-double duration, distance_corner, distance_front_back = 3000, s1, s2, s3, s4, f1 = 3000, b1 = 3000;
-double CalibrationFactor = 58.3;
-int objectDetection;
 
 /************************************************************************************************/
 
@@ -228,7 +233,7 @@ void loop() {
 
   //Serial.println("Begin");
 
-  if ((controllerMode == false) && (dockingMode == false) && (objectDetection == 0))  //must reset the master board after putting the boat in controllerMode. This is intentional
+  if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0))  //must reset the master board after putting the boat in controllerMode. This is intentional
   {
     incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();                  // check incoming serial communication

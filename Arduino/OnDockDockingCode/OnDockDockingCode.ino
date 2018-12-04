@@ -4,10 +4,11 @@
 
 /******************** Sonar Setup ************************************************************/
 
-#define EchoPinS1 31
-#define EchoPinS2 25
-#define TrigPinS1 29
-#define TrigPinS2 23
+#define echoPinS1 2 //Left sensor when looking into the docking port
+#define trigPinS1 3
+
+#define echoPinS2 4 //Right sensor when looking into the docking port
+#define trigPinS2 5
 
 double S1_Duration, S2_Duration;
 float distanceS1;
@@ -94,10 +95,10 @@ void setup() {
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
 
-  pinMode(31, INPUT);
-  pinMode(29, OUTPUT);
-  pinMode(25, INPUT);
-  pinMode(23, OUTPUT);
+  pinMode(echoPinS1, INPUT);
+  pinMode(trigPinS1, OUTPUT);
+  pinMode(echoPinS2, INPUT);
+  pinMode(trigPinS2, OUTPUT);
 
     
 }

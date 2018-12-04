@@ -4,7 +4,7 @@ void setMotors_Serial()                                                    //set
   leftMotorValue = map(inByte[numberOfInputs - 2][1], -100 , 100, minSpeed, maxSpeed);    //maps a value given in percent to an analog value
   rightMotorValue = map(inByte[numberOfInputs - 1][1], -100 , 100, minSpeed, maxSpeed);   //maps a value given in percent to an analog value
 
-  
+
   leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
   rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
 
@@ -63,7 +63,7 @@ void setMotors_Controller()
     rightMotorValue = stopSpeed;
   }
 
-  
+
   leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
   rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
 
@@ -79,11 +79,11 @@ void setMotors_Controller()
 }
 
 
-void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal){
+void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal) {
   leftMotorValue = map(leftMotorDockVal, -100 , 100, minSpeed, maxSpeed);    //maps a value given in percent to an analog value
   rightMotorValue = map(rightMotorDockVal, -100 , 100, minSpeed, maxSpeed);   //maps a value given in percent to an analog value
 
-  
+
   leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
   rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
 
@@ -97,43 +97,61 @@ void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal){
 
 void setMotors_Sonar()
 {
-  if (Direction == 0 || Direction == 2) //Turn Right
-  {
+  if (Direction == 1 || Direction == 2){//Turn Right
+    
     leftMotorValue = maxSpeed;
     rightMotorValue = minSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
     delay(300);
+
     leftMotorValue = maxSpeed;
     rightMotorValue = maxSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-    delay(300);
+    delay(100);
+
+    leftMotorValue = minSpeed;
+    rightMotorValue = minSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(50); //adjust if the boat is drifting forward too much
+
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-    delay(300);
+
+    cornerSonarCheck();
   }
-  else if (Direction == 1) //Turn Left
+
+  //**************************************************************************************************************************8
+  
+  else if (Direction == 0) //Turn Left
   {
     leftMotorValue = minSpeed;
     rightMotorValue = maxSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
     delay(300);
+
     leftMotorValue = maxSpeed;
     rightMotorValue = maxSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-    delay(300);
+    delay(100);
+
+    leftMotorValue = minSpeed;
+    rightMotorValue = minSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(50); //adjust if the boat is drifting forward too much
+
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-    delay(100);
+
+    cornerSonarCheck();
   }
-
-  //Object_Location();
-
 }
