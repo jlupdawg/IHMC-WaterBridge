@@ -4,10 +4,10 @@
 
 /******************** Sonar Setup ************************************************************/
 
-#define EchoPinS1 31
-#define EchoPinS2 25
-#define TrigPinS1 29
-#define TrigPinS2 23
+#define EchoPinS1 6
+#define EchoPinS2 8
+#define TrigPinS1 7
+#define TrigPinS2 9
 
 double S1_Duration, S2_Duration;
 float distanceS1;
@@ -46,9 +46,6 @@ byte nodeNumber = 3; //defines which device is communicating with the master, 3 
 
 /************************************************************************************************************************/
 
-
-// Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
