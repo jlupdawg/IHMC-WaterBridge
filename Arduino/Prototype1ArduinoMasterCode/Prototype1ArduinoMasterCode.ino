@@ -103,7 +103,7 @@ double distance_corner, distance_front_back = 3000, s1, s2, s3, s4;//-----------
 double f1 = 3000, b1 = 3000; //----------------------------------------------------------------------------------out of range values, sonar will never read this high
 double watchCircleRadius = 106.5; //-----------------------------------------------------------------------------radius of circle "around" the boat, used for minimum allowable distance of objects to the center of the boat
 double CalibrationFactor = 58.3; //------------------------------------------------------------------------------units: microsec/cm, initialize as 58.3(STP factor) when thermisor not set up
-int objectIndicated, forward, backwards, notMoving = 3; //-----------------------------------------------------------state indicator variables
+int objectIndicated = 0, forward = 0, backwards = 0, notMoving = 3; //-----------------------------------------------------------state indicator variables
 int Direction = 3; //--------------------------------------------------------------------------------------------Left(1), Right(0), Center(2): relative to the front sonar sensor(front of boat), 3 is never a valid direction indicator
 
 int ThermistorPin = 0;
@@ -230,18 +230,18 @@ void loop() {
 
   //Serial.println("Begin");
 
-  if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0))  //-------------must reset the master board after putting the boat in controllerMode. This is intentional
-  {
+  if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();               // ------------------------------------------------------------------check incoming serial communication
     printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
     Object_Location();
-    if (updateMotors)
-    {
+    
+    if (updateMotors) {
       setMotors_Serial();       // ------------------------------------------------------------------set the motors with pwm pin values
       //writeLCD_Motors();
       //writeLCD(inByte[0][1], inByte[1][1]);
     }
+
     loggingData("Normal");
   }
   else if (controllerModeHard == true)
@@ -256,7 +256,7 @@ void loop() {
     setMotors_Sonar();
     cornerSonarCheck();
     setMotors_Sonar();
-    
+
     loggingData("Sonar");
   }
   else if (controllerMode == true)   //------------------------------------------------------------------Only perform tasks necessary to manually control the boat
