@@ -253,7 +253,7 @@ void loop() {
     setMotors_Controller();
     loggingData("Controller Mode Hard");
   }
-  else if (objectDetection == 1 && dockingMode == false) {
+  else if (objectIndicated == 1 && dockingMode == false) {
     incomingRadio();
     Object_Location();
     setMotors_Sonar();
