@@ -95,10 +95,10 @@ void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal) {
 
 }
 
-void setMotors_Sonar()
-{
-  if (Direction == 1 || Direction == 2){//Turn Right
-    
+void setMotors_Sonar() {
+  incomingRadio();
+  if (Direction == 1 || Direction == 2) { //Turn Right
+
     leftMotorValue = maxSpeed;
     rightMotorValue = minSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
@@ -115,18 +115,17 @@ void setMotors_Sonar()
     rightMotorValue = minSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-    delay(50); //adjust if the boat is drifting forward too much
+    delay(2); //adjust if the boat is drifting forward too much, or backwards too much
 
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-
-    cornerSonarCheck();
+    return;
   }
 
   //**************************************************************************************************************************8
-  
+
   else if (Direction == 0) //Turn Left
   {
     leftMotorValue = minSpeed;
@@ -145,13 +144,12 @@ void setMotors_Sonar()
     rightMotorValue = minSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-    delay(50); //adjust if the boat is drifting forward too much
+    delay(2); //adjust if the boat is drifting forward too much
 
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
-
-    cornerSonarCheck();
+    return;
   }
 }
