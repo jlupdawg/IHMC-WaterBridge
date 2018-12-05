@@ -65,11 +65,11 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 /************************************************************************************************/
 
 /************************************ Serial Communication **************************************/
-char inputString[50];            // a string to hold incoming data
-boolean stringComplete = false;  // whether the string is complete
-const int numberOfInputs = 4;    // number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
-int inByte[numberOfInputs][2];   // decoded serial communication 2D array for comparison of previous values
-char *inputs[numberOfInputs];    // raw serial communication
+char inputString[50];            // ------------------------------------------------------------------a string to hold incoming data
+boolean stringComplete = false;  // ------------------------------------------------------------------whether the string is complete
+const int numberOfInputs = 4;    // ------------------------------------------------------------------number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
+int inByte[numberOfInputs][2];   // ------------------------------------------------------------------decoded serial communication 2D array for comparison of previous values
+char *inputs[numberOfInputs];    // ------------------------------------------------------------------raw serial communication
 /************************************************************************************************/
 
 /************************************ Manual Controller *****************************************/
@@ -93,25 +93,21 @@ bool controllerModeHard = false;
 #define echoPin_3 27
 #define trigPin_4 37
 #define echoPin_4 35
+/*Pins for Front and Back sonar sensors*/
+#define pinF_2 5      //Front sonar echo pin
+#define pinB_2 6      //Back sonar echo pin
+#define pinB_4 11     //F_B sonar trigger pin
 
-//Pins for Front and Back sonar sensors
-#define pinF_2 5 //Front sonar echo pin
-#define pinB_2 6 //Back sonar echo pin
-#define pinB_4 11  //F_B sonar trigger pin
+double duration_corner, duration_front_back; //------------------------------------------------------------------variable for microsecond values recorded from sonar values
+double distance_corner, distance_front_back = 3000, s1, s2, s3, s4;//--------------------------------------------distance storage variables
+double f1 = 3000, b1 = 3000; //----------------------------------------------------------------------------------out of range values, sonar will never read this high
+double watchCircleRadius = 106.5; //-----------------------------------------------------------------------------radius of circle "around" the boat, used for minimum allowable distance of objects to the center of the boat
+double CalibrationFactor = 58.3; //------------------------------------------------------------------------------units: microsec/cm, initialize as 58.3(STP factor) when thermisor not set up
+int objectIndicated, forward, backwards, notMoving = 3; //-----------------------------------------------------------state indicator variables
+int Direction = 3; //--------------------------------------------------------------------------------------------Left(1), Right(0), Center(2): relative to the front sonar sensor(front of boat), 3 is never a valid direction indicator
 
-double duration_corner, duration_front_back; //variable for microsecond values recorded from sonar values
-double distance_corner; //distance variable used in the corner sonar function
-double distance_front_back = 3000; //distance variable used in the front back sonar function
-double s1, s2, s3, s4; //corner sonar distance variables
-double f1 = 3000, b1 = 3000; //Out of range values, sonar will never read this high
-double watchCircleRadius = 106.5; //radius of circle around the boat, used for minimum allowable distance of objects to the center of the boat
-
-double CalibrationFactor = 58.3; //initialize as 58.3(STP factor) when thermisor not set up
-int objectIndicated, forward, backwards, notMoving; //Indicator variables
-
-int Direction = 3; //Left and Right are relative to the front sonar sensor(front of boat), 3 is not a direction indicator
-const int ThermistorPin = 0;
-double AmbientTemp; //Celcius
+int ThermistorPin = 0;
+double AmbientTemp; //-------------------------------------------------------------------------------------------Celcius
 
 /************************************************************************************************/
 
@@ -150,7 +146,7 @@ Servo rightMotor;
 int percentage = 15;
 
 //int minSpeed = 1100;
-int stopSpeed = 1500;
+int stopSpeed = 1500; //--------------------------------------------------------------------------Mapped to 0% motor speed
 //int maxSpeed = 1900;
 int minSpeed = stopSpeed - (400 * percentage / 100);
 int maxSpeed = (400 * percentage / 100) + stopSpeed;
@@ -216,6 +212,7 @@ void setup() {
 
 
   /*************************************Sonar Pin Modes******************************************************/
+  //----------------------------------------------------------------------------------------------------------echo pins are set to input because they recieve a sound pulse in from a transmit, triger are set to output because arduino triggers a pulse using HIGH -> LOW
   pinMode(trigPin_1, OUTPUT);
   pinMode(echoPin_1, INPUT);
   pinMode(trigPin_2, OUTPUT);
@@ -226,22 +223,22 @@ void setup() {
   pinMode(echoPin_4, INPUT);
   pinMode(pinF_2, INPUT);
   pinMode(pinB_2, INPUT);
-  pinMode(pinB_4, OUTPUT); //Using pin 2 for triggering asymetric firing of front and back sonar sensor.
+  pinMode(pinB_4, OUTPUT); //--------------------------------------------------------------------------------uses pin 2 for triggeringboth front and back sonar sensor.
 }
 
 void loop() {
 
   //Serial.println("Begin");
 
-  if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0))  //must reset the master board after putting the boat in controllerMode. This is intentional
+  if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0))  //-------------must reset the master board after putting the boat in controllerMode. This is intentional
   {
-    incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-    readSerial();                  // check incoming serial communication
-    printInByte();                 // printInbyte and decide on whether or not the motors should be updated and prints the value
+    incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
+    readSerial();               // ------------------------------------------------------------------check incoming serial communication
+    printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
     Object_Location();
     if (updateMotors)
     {
-      setMotors_Serial();                 // set the motors with pwm pin values
+      setMotors_Serial();       // ------------------------------------------------------------------set the motors with pwm pin values
       //writeLCD_Motors();
       //writeLCD(inByte[0][1], inByte[1][1]);
     }
@@ -253,15 +250,18 @@ void loop() {
     setMotors_Controller();
     loggingData("Controller Mode Hard");
   }
-  else if (objectDetection == 1 && dockingMode == false) {
+  else if (objectIndicated == 1 && dockingMode == false) {
     incomingRadio();
     Object_Location();
     setMotors_Sonar();
+    cornerSonarCheck();
+    setMotors_Sonar();
+    
     loggingData("Sonar");
   }
-  else if (controllerMode == true)   //Only perform tasks necessary to manually control the boat
+  else if (controllerMode == true)   //------------------------------------------------------------------Only perform tasks necessary to manually control the boat
   {
-    incomingRadio();            // reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
+    incomingRadio();            // ----------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     setMotors_Controller();
     Object_Location();
     //Serial.println("Controller Mode");
@@ -278,8 +278,5 @@ void loop() {
     DockingMechanism();
 
   }
-
-
-  /***********************************************************************************SONAR LOOP CODE************************************************************************************************/
 
 }

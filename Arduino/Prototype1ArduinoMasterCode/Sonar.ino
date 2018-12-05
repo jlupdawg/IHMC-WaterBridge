@@ -6,87 +6,154 @@ void SonarSensor_Front_Back(double CalibrationFactor) {
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 void cornerSonarCheck() {
   if (forward == 1) { //boat going forward
-
     s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
     s2 = SonarSensor_Corner(trigPin_2, echoPin_2);
 
     if (s2 < watchCircleRadius) { //calculated for the minimum distance so the boat can turn and not hit the object when turning
       if (s2 < s1) { //object is to the right side relative to front sensor
         Direction = 0;
-        setMotors_Sonar();
+        return;
       }
+      return;
     }
     else if (s1 < watchCircleRadius) {
       if (s1 < s2) { //object is to the left side relative to front sensor
         Direction = 1;
-        setMotors_Sonar();
+        return;
       }
     }
     else { //Exits sonar mode
+      Serial.println("Indicator: Object drifted out of range of S1 or S2");
       objectIndicated = 0;
+      return;
     }
+    return;
   }
-
-  else { //boat going backwards
+  /***********************************************************************************************************************/
+  else if (backwards == 1) { //boat going backwards
     s3 = SonarSensor_Corner(trigPin_1, echoPin_1);
     s4 = SonarSensor_Corner(trigPin_2, echoPin_2);
 
     if (s4 < watchCircleRadius) {
       if (s4 < s3) {//obj left relative to front
         Direction = 0;
-        setMotors_Sonar();
+        return;
       }
     }
     else if (s3 < watchCircleRadius) {
       if (s3 < s4) {
         Direction = 1; //Direction equals zero because the boat is moving in reverse so the motors need to go the opposite direction.
-        setMotors_Sonar();
+        return;
       }
     }
-    else { //in an else condition is triggered, no object is near by, f1 or b1 should read greater than 100cm at this time.
+    else {
+      Serial.println("Indicator: Object drifted out of range of S3 or S4");
       objectIndicated = 0;
+      return;
     }
+    return;
   }
+  /***********************************************************************************************************************/
+  else if (notMoving == 1) {
+    leftMotorValue = maxSpeed;
+    rightMotorValue = maxSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    delay(1);
+    leftMotorValue = stopSpeed;
+    rightMotorValue = stopSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+
+    forward = 1;
+
+    f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+    objectDetection();
+    return;
+  }
+  return;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 void Object_Location() {
-
-  if (leftMotorValue > 1500 || rightMotorValue > 1500) { // boat moving forward
+  if (leftMotorValue > 1500 && rightMotorValue > 1500) { //****************************Motor Condition - Forward
     forward = 1;
     backwards = 0;
     notMoving = 0;
 
     f1 = SonarSensor_Front_Back(pinB_4, pinF_2); //Fire front sonar sensor
 
-    if (f1 < 16) { //16cm is the minimum range of the front/back sonar sensors
-      f1 = 3000; //Out of range value, sonar will never read this high
-    }
-
     objectDetection();
+    return;
   }
 
-  else if (leftMotorValue < 1500) { //motors moving backwards
+  else if (leftMotorValue > 1500 && rightMotorValue < 1500) {//****************************Motor Condition - Right Turn
+    if (forward == 1) {
+      f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+      backwards = 0;
+      notMoving = 0;
+      objectDetection();
+      return;
+    }
+    else if (backwards == 1) {
+      b1 = SonarSensor_Front_Back(pinB_4, pinB_2);
+      forward = 0;
+      notMoving = 0;
+      objectDetection();
+      return;
+    }
+    else {
+      Serial.println("Error 1: Object_Location() - F1/B1 Sonar Not Fired");
+      f1 = 3000;
+      b1 = 3000;
+      s1 = s2 = 3000;
+      s3 = s4 = 3000;
+      objectDetection();
+      return;
+    }
+    return;
+  }
+
+  else if (leftMotorValue < 1500 && rightMotorValue > 1500) {//****************************Motor Condition - Left Turn
+    if (forward == 1) {
+      f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+      objectDetection();
+      return;
+    }
+    else if (backwards == 1) {
+      b1 = SonarSensor_Front_Back(pinB_4, pinB_2);
+      objectDetection();
+      return;
+    }
+    else {
+      Serial.println("Error 2: Object_Location() - F1/B1 Sonar Not Fired");
+      f1 = 3000;
+      b1 = 3000;
+      s1 = s2 = 3000;
+      s3 = s4 = 3000;
+      objectDetection();
+      return;
+    }
+    return;
+  }
+
+  else if (leftMotorValue < 1500 && rightMotorValue < 1500) {//****************************Motor Condition - Backwards
     forward = 0;
     backwards = 1;
     notMoving = 0;
-
     b1 = SonarSensor_Front_Back(pinB_4, pinB_2);
-
-    if (b1 < 16) { //16cm is the minimum range of the front/back sonar sensors
-      b1 = 3000; //Out of range value, sonar will never read this high
-    }
-
     objectDetection();
+    return;
   }
 
-  else if (leftMotorValue == 1500 || rightMotorValue == 1500) { //if condition for when the motors are not spinning, boat could be drifting
+  else if (leftMotorValue == 1500 && rightMotorValue == 1500) { //****************************Motor Condition - No motor speed
     if (forward == 1) {
       forward = 0;
       notMoving = 1;
       f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
       objectDetection();
+      return;
     }
 
     else if (backwards == 1) {
@@ -94,19 +161,39 @@ void Object_Location() {
       notMoving = 1;
       b1 = SonarSensor_Front_Back(pinB_4, pinB_2);
       objectDetection();
+      return;
     }
-    else {
-      Serial.println("Error - Boat sensing idication error: The boat is not moving, boat is not going backwards, and boat is not going forward, indication of movement is undefined.");
+    else if (notMoving == 3) {
+      Serial.println("Boat start up: No change in motor values indicated, firing front sonar");
+
+      leftMotorValue = maxSpeed;
+      rightMotorValue = maxSpeed;
+      leftMotor.writeMicroseconds(leftMotorValue);
+      rightMotor.writeMicroseconds(rightMotorValue);
+      delay(10);
+      leftMotorValue = stopSpeed;
+      rightMotorValue = stopSpeed;
+      leftMotor.writeMicroseconds(leftMotorValue);
+      rightMotor.writeMicroseconds(rightMotorValue);
+
+      forward = 1;
+
+      f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+      objectDetection();
+      return;
     }
+    return;
   }
   else {
+    Serial.println("CRITICAL ERROR: No motor values, motors sheared off boat.");
     f1 = 3000;
     b1 = 3000;
     s1 = s2 = 3000;
     s3 = s4 = 3000;
-
     objectDetection();
+    return;
   }
+  return;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -119,17 +206,21 @@ void objectDetection() { //function to compare read sonar values, this function 
 
     if (s1 < s2) {
       Direction = 1; //object is to the left side relative to front sensor
+      return;
     }
 
     else if (s2 < s1) {
       Direction = 0; //object is to the right side relative to front sensor
+      return;
     }
     else {
       Direction = 2; //object is centered relative to front sensor
+      return;
     }
   }
   else {
     objectIndicated = 0;
+    return;
   }
 
   if (b1 <= 100) { //distance in cm
@@ -139,20 +230,25 @@ void objectDetection() { //function to compare read sonar values, this function 
 
     if (s3 < s4) {
       Direction = 0; //object is to the right side relative to front sensor
+      return;
     }
 
     else if (s4 < s3) {
       Direction = 1; //object is to the left side relative to front sensor
+      return;
     }
 
     else {
       Direction = 2; //object is centered relative to front sensor
+      return;
     }
+    return;
   }
   else {
     objectIndicated = 0;
+    return;
   }
-
+  return;
 }
 
 
