@@ -55,17 +55,10 @@ void cornerSonarCheck() {
   }
   /***********************************************************************************************************************/
   else if (notMoving == 1) {
-    leftMotorValue = maxSpeed;
-    rightMotorValue = maxSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-    delay(1);
-    leftMotorValue = stopSpeed;
-    rightMotorValue = stopSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
 
-    forward = 1;
+    forward = 0;
+    backwards = 0;
+    notMoving = 1;
 
     f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
     objectDetection();
@@ -149,6 +142,8 @@ void Object_Location() {
 
   else if (leftMotorValue == 1500 && rightMotorValue == 1500) { //****************************Motor Condition - No motor speed
     if (forward == 1) {
+      Serial.println("Habala badingdong");
+      backwards = 0;
       forward = 0;
       notMoving = 1;
       f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
@@ -157,6 +152,7 @@ void Object_Location() {
     }
 
     else if (backwards == 1) {
+      forward = 0;
       backwards = 0;
       notMoving = 1;
       b1 = SonarSensor_Front_Back(pinB_4, pinB_2);
@@ -166,18 +162,17 @@ void Object_Location() {
     else if (notMoving == 3) {
       Serial.println("Boat start up: No change in motor values indicated, firing front sonar");
 
-      leftMotorValue = maxSpeed;
-      rightMotorValue = maxSpeed;
-      leftMotor.writeMicroseconds(leftMotorValue);
-      rightMotor.writeMicroseconds(rightMotorValue);
-      delay(10);
-      leftMotorValue = stopSpeed;
-      rightMotorValue = stopSpeed;
-      leftMotor.writeMicroseconds(leftMotorValue);
-      rightMotor.writeMicroseconds(rightMotorValue);
-
       forward = 1;
-
+      backwards = 0;
+      notMoving = 0;
+      f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+      objectDetection();
+      return;
+    }
+    else { //boat notMoving = 1;
+      forward = 0;
+      backwards = 0;
+      notMoving = 1;
       f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
       objectDetection();
       return;
@@ -194,6 +189,12 @@ void Object_Location() {
     return;
   }
   return;
+}
+
+void megaBroke() {
+  forward = 1;
+  notMoving = 0;
+  backwards = 0;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -217,6 +218,7 @@ void objectDetection() { //function to compare read sonar values, this function 
       Direction = 2; //object is centered relative to front sensor
       return;
     }
+    return;
   }
   else {
     objectIndicated = 0;
@@ -251,7 +253,6 @@ void objectDetection() { //function to compare read sonar values, this function 
   return;
 }
 
-
 double CalibrationFactorCalculation() {
   double RawTemp = analogRead(0); //Reads raw temperature data, stores it in RawTemp
 
@@ -264,20 +265,19 @@ double CalibrationFactorCalculation() {
   if (AmbientTemp >= 270 || AmbientTemp <= -270) { //Safeguard for failed Thermistor
     CalibrationFactor = 58.3; //Factory calibration factor
   }
-
+  CalibrationFactor = 58.3;
   return CalibrationFactor;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 int SonarSensor_Front_Back(int trigPin, int echoPin) {
-
   digitalWrite(trigPin, HIGH);
-  delayMicroseconds(20); //trigger delay for reduced interference
+  delayMicroseconds(12); //trigger delay for reduced interference
   digitalWrite(trigPin, LOW);
 
   duration_front_back = pulseIn(echoPin, HIGH); //timeout is defualt 1 second add pulseIn(pin, HIGH/LOW, timeout) for specified time out
-  distance_front_back = (distance_front_back / CalibrationFactor);
+  distance_front_back = (duration_front_back / CalibrationFactor);
   delayMicroseconds(5); //helps make the distance readings more stable
 
   return distance_front_back;

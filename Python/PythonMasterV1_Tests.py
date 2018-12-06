@@ -107,31 +107,34 @@ def updateMotors():
     if (abs(angularDiff) > headingRange):            ##If we are outside of the set tolerance:
         if (abs(angularDiff) > 180):                  ##If angular difference is greater than 180, optimize turn:
             if (angularDiff >= 0):                     
-                angularDiff = angularDiff - 180
+                angularDiff = angularDiff - 360
             else:
-                angluarDiff - angularDiff + 180
+                angluarDiff = angularDiff + 360
                 
-            if (angularDiff > 0):                      ##If new angular diff is greater than 0 turn LEFT
-                rightMotor = maxSpeed/turnFactor
-                leftMotor = -maxSpeed/turnFactor
-            else:                                    ##Else angular diff is less than 0 turn RIGHT
-                rightMotor = -maxSpeed/turnFactor
-                leftMotor = maxSpeed/turnFactor
+            if (angularDiff > 0):                      ##If new angular diff is greater than 0 turn RIGHT
+                rightMotor = -maxSpeed*abs(angularDiff/180)
+                leftMotor = maxSpeed*abs(angularDiff/180)
+            else:                                    ##Else angular diff is less than 0 turn LEFT
+                rightMotor = maxSpeed*abs(angularDiff/180)
+                leftMotor = -maxSpeed*abs(angularDiff/180)
                 
         elif (abs(angularDiff) == 180):            ##Else If angular difference is 180, turn RIGHT
-                rightMotor = -maxSpeed/turnFactor
-                leftMotor = maxSpeed/turnFactor
+                rightMotor = -maxSpeed
+                leftMotor = maxSpeed
         
         else:                                        ##Else no optimization is required
             if (angularDiff > 0):                       ##If required > current turn right
-                rightMotor = -maxSpeed/turnFactor
-                leftMotor = maxSpeed/turnFactor
+                rightMotor = -maxSpeed*abs(angularDiff/180)
+                leftMotor = maxSpeed*abs(angularDiff/180)
             else:                                     ##Else required < current turn left
-                rightMotor = maxSpeed/turnFactor
-                leftMotor = -maxSpeed/turnFactor
+                rightMotor = maxSpeed*abs(angularDiff/180)
+                leftMotor = -maxSpeed*abs(angularDiff/180)
     else:                                           ##Else if we are in the set tolerance FULL SPEED AHEAD
         rightMotor = maxSpeed   
         leftMotor = maxSpeed
+
+        ##remove constraints in arduino for serialMotors
+        ##Set max Range to 20 degrees
         
 
 def checkStatus():
