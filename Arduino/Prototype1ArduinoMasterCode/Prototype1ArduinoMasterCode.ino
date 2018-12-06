@@ -279,8 +279,8 @@ void loop() {
       setMotors_dock();
       loggingData("Docking Mode");*/
     DockingMechanism();
-    Serial.print("Left: "); Serial.println(leftMotorValue);
-    Serial.print("Right: "); Serial.println(rightMotorValue);
+    /*Serial.print("Left: "); Serial.println(leftMotorValue);
+    Serial.print("Right: "); Serial.println(rightMotorValue);*/
 
   }
 
