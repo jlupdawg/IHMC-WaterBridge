@@ -43,6 +43,8 @@ void incomingRadio() {
           //Serial.println(arr[i]);
           dockingRegion = dockingArray[1];
           desiredHeading = dockingArray[2];
+
+          printDockingStuff();
         }
       }
     }
@@ -70,3 +72,8 @@ void incomingRadio() {
 
   }
 }
+
+void printDockingStuff(){
+  Serial.print("dockingRegion: "); Serial.println(dockingRegion);
+  Serial.print("desiredHeading "); Serial.println(desiredHeading);
+  }
