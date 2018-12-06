@@ -14,11 +14,11 @@ void CalibrationFactorCalculation() {
 
 void Sonar_S1() {
 
-  digitalWrite(TrigPinS1, HIGH);
+  digitalWrite(trigPinS1, HIGH);
   delayMicroseconds(50); //trigger delay for reduced interference
-  digitalWrite(TrigPinS1, LOW);
+  digitalWrite(trigPinS1, LOW);
 
-  S1_Duration = pulseIn(EchoPinS1, HIGH);
+  S1_Duration = pulseIn(echoPinS1, HIGH);
   distanceS1 = (S1_Duration / CalibrationFactor);
   delayMicroseconds(5); //helps make the distance readings more stable
 
@@ -32,11 +32,11 @@ void Sonar_S1() {
 
 void Sonar_S2() {
 
-  digitalWrite(TrigPinS2, HIGH);
+  digitalWrite(trigPinS2, HIGH);
   delayMicroseconds(50); //trigger delay for reduced interference
-  digitalWrite(TrigPinS2, LOW);
+  digitalWrite(trigPinS2, LOW);
 
-  S2_Duration = pulseIn(EchoPinS2, HIGH);
+  S2_Duration = pulseIn(echoPinS2, HIGH);
   distanceS2 = (S2_Duration / CalibrationFactor);
   delayMicroseconds(5); //helps make the distance readings more stable
 

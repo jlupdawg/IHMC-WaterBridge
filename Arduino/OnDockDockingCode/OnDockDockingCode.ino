@@ -4,14 +4,23 @@
 
 /******************** Sonar Setup ************************************************************/
 
-#define EchoPinS1 31
-#define EchoPinS2 25
-#define TrigPinS1 29
-#define TrigPinS2 23
+#define echoPinS1 2 //Left sensor when looking into the docking port
+#define trigPinS1 3
+
+#define echoPinS2 4 //Right sensor when looking into the docking port
+#define trigPinS2 5
+=======
+#define EchoPinS1 6
+#define EchoPinS2 8
+#define TrigPinS1 7
+#define TrigPinS2 9
 
 double S1_Duration, S2_Duration;
 float distanceS1;
 float distanceS2;
+
+byte nodeNumber = 3; //defines which device is communicating with the master, 3 IS THE DOCK!!!!! 
+
 float distBetweenSensors = 75; //distance in cm between S1 and S2
 float detectDist = 1500; //Minimum distance from each sonar to consider an object "detected"
 float AmbientTemp;
@@ -42,13 +51,9 @@ int regionVariable; //zone number that is sent through radio
 #define RFM95_INT 3   // "B"
 /****************************************************** Output Variables *************************************************/
 
-byte nodeNumber = 3; //defines which device is communicating with the master, 3 IS THE DOCK!!!!! 
 
 /************************************************************************************************************************/
 
-
-// Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -94,10 +99,10 @@ void setup() {
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
 
-  pinMode(31, INPUT);
-  pinMode(29, OUTPUT);
-  pinMode(25, INPUT);
-  pinMode(23, OUTPUT);
+  pinMode(echoPinS1, INPUT);
+  pinMode(trigPinS1, OUTPUT);
+  pinMode(echoPinS2, INPUT);
+  pinMode(trigPinS2, OUTPUT);
 
     
 }

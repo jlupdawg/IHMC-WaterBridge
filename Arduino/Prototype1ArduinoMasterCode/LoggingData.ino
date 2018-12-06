@@ -5,6 +5,15 @@ void loggingData(String title)
     Serial.print(title); Serial.println(" Mode");
     Serial.print("Left Motor = "); Serial.println(leftMotorValue);
     Serial.print("Right Motor = "); Serial.println(rightMotorValue);
+    /*
+      Serial.print("f1:");
+      Serial.print(" - ");
+      Serial.print(f1);
+      Serial.print(" - ");
+      Serial.print("b1");
+      Serial.print(" - ");
+      Serial.println(b1);
+    */
 
     if (title == "Controller Mode")
     {
@@ -20,6 +29,16 @@ void loggingData(String title)
       {
         Serial.print("Docking Array "); Serial.print(i); Serial.print(" = "); Serial.println(dockingArray[i]);
       }
+    }
+    if (title == "Sonar")
+    {
+      Serial.print("f1: "); Serial.print(f1);  Serial.print(" - "); Serial.print("b1: "); Serial.print(b1);
+      Serial.print("Forward: ");  Serial.print(forward);  Serial.print(" - Backwards: ");  Serial.print(backwards);  Serial.print(" - notMoving: ");  Serial.print(notMoving);
+    }
+    if (title == "Normal")
+    {
+      Serial.print("f1: "); Serial.print(f1);  Serial.print(" - "); Serial.print("b1: "); Serial.print(b1);
+      Serial.print("NForward: ");  Serial.print(forward);  Serial.print(" - NBackwards: ");  Serial.print(backwards);  Serial.print(" - NnotMoving: ");  Serial.print(notMoving);
     }
 
     Serial.println();
@@ -38,4 +57,3 @@ int split()
   currentMillis = millis();
   return currentMillis - previousMillis;
 }
-
