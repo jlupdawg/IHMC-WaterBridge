@@ -15,6 +15,8 @@
 #define TrigPinS1 7
 #define TrigPinS2 9
 
+int regionVariable; //zone number that is sent through radio
+
 double S1_Duration, S2_Duration;
 float distanceS1;
 float distanceS2;
@@ -38,7 +40,6 @@ float desiredHeading;
 bool signalReceived = true;
 bool boatConfirmed = true; //We absolutely do not need this for the pool
 bool dockingMode;
-int regionVariable; //zone number that is sent through radio
 
 /************ Radio Setup **********************************************************/
 
