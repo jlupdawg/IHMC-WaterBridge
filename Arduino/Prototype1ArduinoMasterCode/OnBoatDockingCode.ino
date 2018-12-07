@@ -16,7 +16,7 @@ boolean boatDocked; //stores whether or not the dock has completed docking
 float leftMotorDockVal;
 float rightMotorDockVal;
 
-int dockingRegion;
+//int dockingRegion;
 
 void DockingMechanism() {
   incomingRadio();
@@ -37,12 +37,12 @@ void DockingMechanism() {
       case 2:
         //Region B
         // Turn right
-        setMotors_dock(0, 2); //DISCUSS AND CHANGE THESE VALUES
+        setMotors_dock(-10, 15); //DISCUSS AND CHANGE THESE VALUES
         break;
       case 3:
         //Region C
         //Turn left
-        setMotors_dock(2, 0); //DISCUSS AND CHANGE THESE VALUES
+        setMotors_dock(15, -10); //DISCUSS AND CHANGE THESE VALUES
         break;
       case 4:
         //Region D
@@ -52,7 +52,7 @@ void DockingMechanism() {
       case 5:
         //Region E
         //Go forward
-        setMotors_dock(2, 2);
+        setMotors_dock(15, 15);
       default:
         //error
         break;

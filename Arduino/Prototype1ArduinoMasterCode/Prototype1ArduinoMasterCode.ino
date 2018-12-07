@@ -226,9 +226,14 @@ void setup() {
   pinMode(pinB_4, OUTPUT); //--------------------------------------------------------------------------------uses pin 2 for triggeringboth front and back sonar sensor.
 }
 
+int dockingRegion;
+
 void loop() {
 
   //Serial.println("loop");
+  if(dockingRegion != 4){
+    dockingMode = true;
+    }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     //Serial.println("PRINT 1");
