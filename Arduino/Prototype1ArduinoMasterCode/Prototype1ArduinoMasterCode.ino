@@ -43,7 +43,7 @@ bool newData = false;
 #include <Servo.h>
 
 
-
+int dockingRegion;
 
 #include <SPI.h>
 #include <RH_RF95.h>
@@ -229,6 +229,9 @@ void setup() {
 void loop() {
 
   //Serial.println("Begin");
+  if (dockingRegion != 4){
+    dockingMode = true;
+    }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
@@ -276,6 +279,8 @@ void loop() {
       setMotors_dock();
       loggingData("Docking Mode");*/
     DockingMechanism();
+    /*Serial.print("Left: "); Serial.println(leftMotorValue);
+    Serial.print("Right: "); Serial.println(rightMotorValue);*/
 
   }
 
