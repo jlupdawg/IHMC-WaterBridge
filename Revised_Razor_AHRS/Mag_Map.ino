@@ -38,6 +38,7 @@ void mag_Map() {
   }
   else if (average_MAG_Heading <= 129) {
     average_MAG_Heading = map(average_MAG_Heading, 107.7, 129, 202.5, 225);
+  }
   else if (average_MAG_Heading <= 152.7) {
     average_MAG_Heading = map(average_MAG_Heading, 129, 152.7, 225, 247.5);
   }
