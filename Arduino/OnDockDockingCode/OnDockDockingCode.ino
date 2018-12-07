@@ -1,19 +1,17 @@
 
-#include <SPI.h>
-#include <RH_RF95.h>
 
 /******************** Sonar Setup ************************************************************/
-
+/*
 #define echoPinS1 2 //Left sensor when looking into the docking port
 #define trigPinS1 3
 
 #define echoPinS2 4 //Right sensor when looking into the docking port
 #define trigPinS2 5
-=======
-#define EchoPinS1 6
-#define EchoPinS2 8
-#define TrigPinS1 7
-#define TrigPinS2 9
+*/
+int echoPinS1  = 6;
+int echoPinS2  = 8;
+int trigPinS1  = 7;
+int trigPinS2  = 9;
 
 int regionVariable; //zone number that is sent through radio
 
@@ -43,22 +41,19 @@ bool dockingMode;
 
 /************ Radio Setup **********************************************************/
 
-
-#define RF95_FREQ 915.0 //Talking to boat, freq matches Rx on boat
+#include <SPI.h>
+#include <RH_RF95.h>
 
 // Singleton instance of the radio driver
 #define RFM95_CS  4    // "E"
 #define RFM95_RST 2   // "D"
 #define RFM95_INT 3   // "B"
-/****************************************************** Output Variables *************************************************/
 
-
-/************************************************************************************************************************/
-
+// Change to 434.0 or other frequency, must match RX's freq!
+#define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
-
 
 void setup() {
   //CalibrationFactorCalculation(); //no thermistor on dock yet
@@ -71,9 +66,16 @@ void setup() {
 /************************************************* This bit is initalizing the radio *****************************/
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
+
+  Serial.begin(115200);
+  while (!Serial) {
+    delay(1);
+  }
+
   delay(100);
-  Serial.println("Arduino LoRa RX Test!");
-  
+
+  Serial.println("Feather LoRa TX Test!");
+
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
@@ -85,7 +87,7 @@ void setup() {
     while (1);
   }
   Serial.println("LoRa radio init OK!");
- 
+
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   if (!rf95.setFrequency(RF95_FREQ)) {
     Serial.println("setFrequency failed");

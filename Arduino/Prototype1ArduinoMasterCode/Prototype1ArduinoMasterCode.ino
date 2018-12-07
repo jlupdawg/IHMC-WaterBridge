@@ -42,8 +42,7 @@ bool newData = false;
 #include <LiquidCrystal.h>
 #include <Servo.h>
 
-
-
+int dockingRegion;
 
 #include <SPI.h>
 #include <RH_RF95.h>
@@ -229,6 +228,10 @@ void setup() {
 void loop() {
 
   //Serial.println("loop");
+  //Serial.println("Begin");
+  if (dockingRegion != 4){
+    dockingMode = true;
+    }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     //Serial.println("PRINT 1");
@@ -281,6 +284,8 @@ void loop() {
       setMotors_dock();
       loggingData("Docking Mode");*/
     DockingMechanism();
+    /*Serial.print("Left: "); Serial.println(leftMotorValue);
+    Serial.print("Right: "); Serial.println(rightMotorValue);*/
 
   }
 
