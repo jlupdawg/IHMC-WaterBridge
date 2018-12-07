@@ -1,6 +1,8 @@
 
 void setMotors_Serial()                                                    //sets the motors straight from the incoming serial data
 {
+  minSpeed = 1300;
+  maxSpeed = 1700;
   leftMotorValue = map(inByte[numberOfInputs - 2][1], -100 , 100, minSpeed, maxSpeed);    //maps a value given in percent to an analog value
   rightMotorValue = map(inByte[numberOfInputs - 1][1], -100 , 100, minSpeed, maxSpeed);   //maps a value given in percent to an analog value
 
@@ -8,8 +10,12 @@ void setMotors_Serial()                                                    //set
   leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
   rightMotorValue = constrain(rightMotorValue, minSpeed, maxSpeed);
 
-  leftMotor.writeMicroseconds(leftMotorValue);
-  rightMotor.writeMicroseconds(rightMotorValue);
+  int adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+  int adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+  leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+  rightMotor.writeMicroseconds(adjustedRightMotorValue);
+  minSpeed = stopSpeed - (400 * percentage / 100);
+  maxSpeed = (400 * percentage / 100) + stopSpeed;
 }
 
 
@@ -94,82 +100,6 @@ void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal) {
   rightMotor.writeMicroseconds(adjustedRightMotorValue);
 
 }
-/*
-void setMotors_Sonar() {
-  incomingRadio();
-  if (Direction == 1 || Direction == 2) { //Turn Right
-
-    leftMotorValue = maxSpeed;
-    rightMotorValue = minSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-    delay(300);
-
-    Serial.println("Right");
-    
-    leftMotorValue = maxSpeed;
-    rightMotorValue = maxSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-    delay(100);
-
-    Serial.println("Forward");
-    
-    leftMotorValue = minSpeed;
-    rightMotorValue = minSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-    delay(2); //adjust if the boat is drifting forward too much, or backwards too much
-
-    Serial.println("Back");
-
-    leftMotorValue = stopSpeed;
-    rightMotorValue = stopSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-
-    Serial.println("Stop");
-    return;
-  }
-
-  //**************************************************************************************************************************8
-
-  else if (Direction == 0) //Turn Left
-  {
-    leftMotorValue = minSpeed;
-    rightMotorValue = maxSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-    delay(300);
-
-    Serial.println("Left");
-
-    leftMotorValue = maxSpeed;
-    rightMotorValue = maxSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-    delay(100);
-
-    Serial.println("Forward");
-
-    leftMotorValue = minSpeed;
-    rightMotorValue = minSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-    delay(2); //adjust  boat is drifting forward too muchif the
-
-    Serial.println("Back");
-
-    leftMotorValue = stopSpeed;
-    rightMotorValue = stopSpeed;
-    leftMotor.writeMicroseconds(leftMotorValue);
-    rightMotor.writeMicroseconds(rightMotorValue);
-
-    Serial.println("Stop");
-    return;
-  }
-}
-*/
 
 void setMotors_Sonar() {
   incomingRadio();

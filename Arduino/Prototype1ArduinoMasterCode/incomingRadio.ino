@@ -35,16 +35,14 @@ void incomingRadio() {
           //Serial.println(arr[i]);
         }
       }
-      else if (arr[0] == 3)
+      else if (arr[0] == 2)
       {
         for (int i = 0; i < index; i++)              // move values from arr to the Docking Array
         {
           dockingArray[i] = arr[i];
-          Serial.println(arr[i]);
+          //Serial.println(arr[i]);
           dockingRegion = dockingArray[1];
           desiredHeading = dockingArray[2];
-
-          printDockingStuff();
         }
       }
     }
@@ -72,8 +70,3 @@ void incomingRadio() {
 
   }
 }
-
-void printDockingStuff(){
-  Serial.print("dockingRegion: "); Serial.println(dockingRegion);
-  Serial.print("desiredHeading "); Serial.println(desiredHeading);
-  }

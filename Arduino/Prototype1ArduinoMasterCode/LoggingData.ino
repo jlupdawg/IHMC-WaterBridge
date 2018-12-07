@@ -33,17 +33,21 @@ void loggingData(String title)
     if (title == "Sonar")
     {
       Serial.print("f1: "); Serial.print(f1);  Serial.print(" - "); Serial.print("b1: "); Serial.print(b1);
+      Serial.print("s1: "); Serial.print(s1);  Serial.print(" - "); Serial.print("s2: "); Serial.print(s2);
       Serial.print("Forward: ");  Serial.print(forward);  Serial.print(" - Backwards: ");  Serial.print(backwards);  Serial.print(" - notMoving: ");  Serial.print(notMoving);
     }
     if (title == "Normal")
     {
-      Serial.print("f1: "); Serial.print(f1);  Serial.print(" - "); Serial.print("b1: "); Serial.print(b1);
+      Serial.print("f1: "); Serial.print(f1);  Serial.print(" - "); Serial.print("b1: "); Serial.print(b1); Serial.print(" - ");
       Serial.print("NForward: ");  Serial.print(forward);  Serial.print(" - NBackwards: ");  Serial.print(backwards);  Serial.print(" - NnotMoving: ");  Serial.print(notMoving);
     }
 
     Serial.println();
     updateTime();
   }
+  else{
+    delay(100);
+    }
 
 }
 

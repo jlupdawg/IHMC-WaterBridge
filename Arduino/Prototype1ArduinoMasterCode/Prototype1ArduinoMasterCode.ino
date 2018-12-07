@@ -42,7 +42,8 @@ bool newData = false;
 #include <LiquidCrystal.h>
 #include <Servo.h>
 
-int dockingRegion;
+
+
 
 #include <SPI.h>
 #include <RH_RF95.h>
@@ -66,7 +67,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 /************************************ Serial Communication **************************************/
 char inputString[50];            // ------------------------------------------------------------------a string to hold incoming data
 boolean stringComplete = false;  // ------------------------------------------------------------------whether the string is complete
-const int numberOfInputs = 4;    // ------------------------------------------------------------------number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
+const int numberOfInputs = 3;    // ------------------------------------------------------------------number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
 int inByte[numberOfInputs][2];   // ------------------------------------------------------------------decoded serial communication 2D array for comparison of previous values
 char *inputs[numberOfInputs];    // ------------------------------------------------------------------raw serial communication
 /************************************************************************************************/
@@ -142,7 +143,7 @@ int rightMotorValue = 0;
 Servo leftMotor;
 Servo rightMotor;
 
-int percentage = 15;
+int percentage = 20;
 
 //int minSpeed = 1100;
 int stopSpeed = 1500; //--------------------------------------------------------------------------Mapped to 0% motor speed
@@ -228,10 +229,6 @@ void setup() {
 void loop() {
 
   //Serial.println("loop");
-  //Serial.println("Begin");
-  if (dockingRegion != 4){
-    dockingMode = true;
-    }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     //Serial.println("PRINT 1");
@@ -242,11 +239,11 @@ void loop() {
     Object_Location();
     //Serial.println("PRINT 7");
     
-    /*if (updateMotors) {
+    if (updateMotors) {
       setMotors_Serial();       // ------------------------------------------------------------------set the motors with pwm pin values
       //writeLCD_Motors();
       //writeLCD(inByte[0][1], inByte[1][1]);
-    }*/
+    }
     
 
     loggingData("Normal");
@@ -284,8 +281,6 @@ void loop() {
       setMotors_dock();
       loggingData("Docking Mode");*/
     DockingMechanism();
-    /*Serial.print("Left: "); Serial.println(leftMotorValue);
-    Serial.print("Right: "); Serial.println(rightMotorValue);*/
 
   }
 
