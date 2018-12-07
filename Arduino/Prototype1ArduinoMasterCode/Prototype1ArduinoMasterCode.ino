@@ -101,7 +101,7 @@ bool controllerModeHard = false;
 double duration_corner, duration_front_back; //------------------------------------------------------------------variable for microsecond values recorded from sonar values
 double distance_corner, distance_front_back = 3000, s1, s2, s3, s4;//--------------------------------------------distance storage variables
 double f1 = 3000, b1 = 3000; //----------------------------------------------------------------------------------out of range values, sonar will never read this high
-double watchCircleRadius = 106.5; //-----------------------------------------------------------------------------radius of circle "around" the boat, used for minimum allowable distance of objects to the center of the boat
+double watchCircleRadius = 150; //106.5-----------------------------------------------------------------------------radius of circle "around" the boat, used for minimum allowable distance of objects to the center of the boat
 double CalibrationFactor = 58.3; //------------------------------------------------------------------------------units: microsec/cm, initialize as 58.3(STP factor) when thermisor not set up
 int objectIndicated = 0, forward = 0, backwards = 0, notMoving = 3; //-----------------------------------------------------------state indicator variables
 int Direction = 3; //--------------------------------------------------------------------------------------------Left(1), Right(0), Center(2): relative to the front sonar sensor(front of boat), 3 is never a valid direction indicator
@@ -236,7 +236,7 @@ void loop() {
     incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();               // ------------------------------------------------------------------check incoming serial communication
     printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
-    Object_Location();
+    //Object_Location();
     //Serial.println("PRINT 7");
     
     if (updateMotors) {
@@ -257,10 +257,12 @@ void loop() {
   else if (objectIndicated == 1 && dockingMode == false) {
     //Serial.println("PRINT 2");
     incomingRadio();
-    Object_Location();
-    setMotors_Sonar();
-    cornerSonarCheck();
-    setMotors_Sonar();
+    //Object_Location();
+    //setMotors_Sonar();
+    //cornerSonarCheck();
+    //setMotors_Sonar();
+    //cornerSonarCompare();//NEW
+    //setMotors_Sonar();//NEW
 
     loggingData("Sonar");
   }
@@ -268,7 +270,7 @@ void loop() {
   {
     incomingRadio();            // ----------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     setMotors_Controller();
-    Object_Location();
+    //Object_Location();
     //Serial.println("Controller Mode");
     loggingData("Controller");
   }

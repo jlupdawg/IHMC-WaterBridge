@@ -1,7 +1,7 @@
 
 /*void SonarSensor_Front_Back(double CalibrationFactor) {
   CalibrationFactor = CalibrationFactor;
-}*/
+  }*/
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 void cornerSonarCheck() {
@@ -56,11 +56,11 @@ void cornerSonarCheck() {
   }
   /***********************************************************************************************************************/
   else if (notMoving == 1) {
-    
+
     forward = 0;
     backwards = 0;
     notMoving = 1;
-    
+
     //f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
 
     s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
@@ -81,12 +81,12 @@ void cornerSonarCheck() {
         return;
       }
     }
-    else if (f1 >= 100){ //Exits sonar mode
+    else if (f1 >= 100) { //Exits sonar mode
       Serial.println("Indicator: Object drifted out of range of S1 or S2");
       objectIndicated = 0;
       return;
     }
-    
+    //cornerSonarCompare();//NEW
     objectDetection();
     return;
   }
@@ -97,7 +97,7 @@ void cornerSonarCheck() {
 
 void Object_Location() {
   //Serial.println("Object_Location");
-  
+
   if (leftMotorValue > 1500 && rightMotorValue > 1500) { //****************************Motor Condition - Forward
     forward = 1;
     backwards = 0;
@@ -196,8 +196,11 @@ void Object_Location() {
       forward = 1;
       backwards = 0;
       notMoving = 0;
-      f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
-      objectDetection();
+      //f1 = SonarSensor_Front_Back(pinB_4, pinF_2); OLD
+
+      frontBackCompare(); //NEW*************
+      
+      //objectDetection(); OLD
       return;
     }
     else { //boat notMoving = 1;
@@ -206,9 +209,10 @@ void Object_Location() {
       backwards = 0;
       notMoving = 1;
 
-      f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
-        
-      objectDetection();
+      //f1 = SonarSensor_Front_Back(pinB_4, pinF_2); OLD
+      frontBackCompare(); //NEW********************************
+
+      //objectDetection(); OLD
       return;
     }
     return;
@@ -224,10 +228,45 @@ void Object_Location() {
   }
   return;
 }
+/****************************************************************NEW BELOW********************************************************************/
+void frontBackCompare() {
+  f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+  delayMicroseconds(10);
+  b1  = SonarSensor_Front_Back(pinB_4, pinB_2);
+  if(f1 < b1){
+    backwards = 1;
+    objectDetection();
+    }
+  if(b1 < f1){
+    forward = 1;
+    objectDetection();
+    }
+}
+
+void cornerSonarCompare(){
+  if(s1 < s4){
+    backwards = 1;
+    Direction = 1; 
+    }
+  if(s4 < s1){
+    forward = 1;
+    Direction = 1;
+    }
+  if(s2 < s3){
+    backwards = 1;
+    Direction = 0;
+    }
+  if(s3 < s2){
+    forward = 1;
+    Direction = 0;
+    }
+  
+  }
+/****************************************************************NEW ABOVE********************************************************************/
 
 void megaBroke() {
   Serial.println("megaBroke");
-  
+
   forward = 1;
   notMoving = 0;
   backwards = 0;
@@ -236,7 +275,7 @@ void megaBroke() {
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 void objectDetection() { //function to compare read sonar values, this function will turn on objectIndicated to 1 if object is within the set distance to trigger(100cm), otherwise objectIndicated will equal 0
   //Serial.println("objectDetection");
-  if (f1 <= 100) { //distance in cm
+  if (f1 <= watchCircleRadius) { //distance in cm
     objectIndicated = 1;
     s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
     s2 = SonarSensor_Corner(trigPin_2, echoPin_2);
@@ -256,12 +295,8 @@ void objectDetection() { //function to compare read sonar values, this function 
     }
     return;
   }
-  else {
-    objectIndicated = 0;
-    return;
-  }
 
-  if (b1 <= 100) { //distance in cm
+  else if (b1 <= watchCircleRadius) { //distance in cm
     objectIndicated = 1;
     s3 = SonarSensor_Corner(trigPin_3, echoPin_3);
     s4 = SonarSensor_Corner(trigPin_4, echoPin_4);
@@ -308,23 +343,23 @@ double CalibrationFactorCalculation() {
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 double tempVar;
-int SonarSensor_Front_Back(int trigPin, int echoPin) {  
+int SonarSensor_Front_Back(int trigPin, int echoPin) {
   //Serial.println("SonarSensor_Front_Back");
   //Serial.println("PRINT 4");
-  
+
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(12); //trigger delay for reduced interference
   digitalWrite(trigPin, LOW);
 
   duration_front_back = pulseIn(echoPin, HIGH); //timeout is defualt 1 second add pulseIn(pin, HIGH/LOW, timeout) for specified time out
   tempVar = (duration_front_back / CalibrationFactor);
-      
-      if (tempVar != 0){
-        distance_front_back = tempVar;
-        }
+
+  if (tempVar != 0) {
+    distance_front_back = tempVar;
+  }
   //Serial.print("duration: "); Serial.println(duration_front_back);
   //delayMicroseconds(10000);
-  
+
   //delayMicroseconds(50); //helps make the distance readings more stable
 
   return distance_front_back;

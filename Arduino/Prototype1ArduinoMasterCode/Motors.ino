@@ -1,8 +1,8 @@
 
 void setMotors_Serial()                                                    //sets the motors straight from the incoming serial data
 {
-  minSpeed = 1300;
-  maxSpeed = 1700;
+  minSpeed = 1400;
+  maxSpeed = 1600;
   leftMotorValue = map(inByte[numberOfInputs - 2][1], -100 , 100, minSpeed, maxSpeed);    //maps a value given in percent to an analog value
   rightMotorValue = map(inByte[numberOfInputs - 1][1], -100 , 100, minSpeed, maxSpeed);   //maps a value given in percent to an analog value
 
@@ -115,23 +115,27 @@ void setMotors_Sonar() {
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(300);
-
+    delay(250);
+    
+    Serial.println("Right");
+    
     leftMotorValue = maxSpeed;
     rightMotorValue = maxSpeed;
     adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(100);
-
+    delay(150);
+    
+    /* old
     leftMotorValue = minSpeed;
     rightMotorValue = minSpeed;
     adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(2); //adjust if the boat is drifting forward too much, or backwards too much
+    //delay(2); //adjust if the boat is drifting forward too much, or backwards too much
+    */
 
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
@@ -151,7 +155,9 @@ void setMotors_Sonar() {
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(300);
+    delay(250);
+
+    Serial.println("Left");
 
     leftMotorValue = maxSpeed;
     rightMotorValue = maxSpeed;
@@ -159,20 +165,25 @@ void setMotors_Sonar() {
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(100);
+    delay(150);
 
+    /*
     leftMotorValue = minSpeed;
     rightMotorValue = minSpeed;
     adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(2); //adjust if the boat is drifting forward too much
+    //delay(2); //adjust if the boat is drifting forward too much
+    */
 
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
+
+    Serial.println("Stop");
+    
     return;
   }
 }
