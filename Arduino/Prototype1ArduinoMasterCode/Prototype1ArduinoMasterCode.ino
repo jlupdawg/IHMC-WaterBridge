@@ -85,8 +85,8 @@ bool controllerModeHard = false;
 /*************************************** Sonar Setup ********************************************/
 
 //Pins for Corner Sonar sensors
-#define trigPin_1 41
-#define echoPin_1 39
+#define trigPin_1 39
+#define echoPin_1 41
 #define trigPin_2 21
 #define echoPin_2 23
 #define trigPin_3 25
@@ -228,19 +228,23 @@ void setup() {
 
 void loop() {
 
-  //Serial.println("Begin");
+  //Serial.println("loop");
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
+    //Serial.println("PRINT 1");
+    
     incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();               // ------------------------------------------------------------------check incoming serial communication
     printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
     Object_Location();
+    //Serial.println("PRINT 7");
     
-    if (updateMotors) {
+    /*if (updateMotors) {
       setMotors_Serial();       // ------------------------------------------------------------------set the motors with pwm pin values
       //writeLCD_Motors();
       //writeLCD(inByte[0][1], inByte[1][1]);
-    }
+    }*/
+    
 
     loggingData("Normal");
   }
@@ -251,6 +255,7 @@ void loop() {
     loggingData("Controller Mode Hard");
   }
   else if (objectIndicated == 1 && dockingMode == false) {
+    //Serial.println("PRINT 2");
     incomingRadio();
     Object_Location();
     setMotors_Sonar();

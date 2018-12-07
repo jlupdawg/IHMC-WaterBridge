@@ -275,7 +275,8 @@ int SonarSensor_Front_Back(int trigPin, int echoPin) {
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(12); //trigger delay for reduced interference
   digitalWrite(trigPin, LOW);
-
+  delayMicroseconds(100);
+  
   duration_front_back = pulseIn(echoPin, HIGH); //timeout is defualt 1 second add pulseIn(pin, HIGH/LOW, timeout) for specified time out
   distance_front_back = (duration_front_back / CalibrationFactor);
   delayMicroseconds(5); //helps make the distance readings more stable
@@ -294,7 +295,7 @@ int SonarSensor_Corner(int trigPin, int echoPin) {
   delayMicroseconds(10); //Allows sound to travel to destination and back
 
   digitalWrite(trigPin, LOW);
-
+  delayMicroseconds(10);
   duration_corner = pulseIn(echoPin, HIGH);
   distance_corner = (duration_corner / CalibrationFactor);
 

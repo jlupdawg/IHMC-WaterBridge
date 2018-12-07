@@ -94,7 +94,7 @@ void setMotors_dock(int leftMotorDockVal, int rightMotorDockVal) {
   rightMotor.writeMicroseconds(adjustedRightMotorValue);
 
 }
-
+/*
 void setMotors_Sonar() {
   incomingRadio();
   if (Direction == 1 || Direction == 2) { //Turn Right
@@ -105,22 +105,30 @@ void setMotors_Sonar() {
     rightMotor.writeMicroseconds(rightMotorValue);
     delay(300);
 
+    Serial.println("Right");
+    
     leftMotorValue = maxSpeed;
     rightMotorValue = maxSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
     delay(100);
 
+    Serial.println("Forward");
+    
     leftMotorValue = minSpeed;
     rightMotorValue = minSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
     delay(2); //adjust if the boat is drifting forward too much, or backwards too much
 
+    Serial.println("Back");
+
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
+
+    Serial.println("Stop");
     return;
   }
 
@@ -134,16 +142,101 @@ void setMotors_Sonar() {
     rightMotor.writeMicroseconds(rightMotorValue);
     delay(300);
 
+    Serial.println("Left");
+
     leftMotorValue = maxSpeed;
     rightMotorValue = maxSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
     delay(100);
 
+    Serial.println("Forward");
+
     leftMotorValue = minSpeed;
     rightMotorValue = minSpeed;
     leftMotor.writeMicroseconds(leftMotorValue);
     rightMotor.writeMicroseconds(rightMotorValue);
+    delay(2); //adjust  boat is drifting forward too muchif the
+
+    Serial.println("Back");
+
+    leftMotorValue = stopSpeed;
+    rightMotorValue = stopSpeed;
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+
+    Serial.println("Stop");
+    return;
+  }
+}
+*/
+
+void setMotors_Sonar() {
+  incomingRadio();
+
+  int adjustedLeftMotorValue = 1500;
+  int adjustedRightMotorValue = 1500;
+
+  if (Direction == 1 || Direction == 2) { //Turn Right
+
+    leftMotorValue = maxSpeed;
+    rightMotorValue = minSpeed;
+    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+    rightMotor.writeMicroseconds(adjustedRightMotorValue);
+    delay(300);
+
+    leftMotorValue = maxSpeed;
+    rightMotorValue = maxSpeed;
+    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+    rightMotor.writeMicroseconds(adjustedRightMotorValue);
+    delay(100);
+
+    leftMotorValue = minSpeed;
+    rightMotorValue = minSpeed;
+    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+    rightMotor.writeMicroseconds(adjustedRightMotorValue);
+    delay(2); //adjust if the boat is drifting forward too much, or backwards too much
+
+    leftMotorValue = stopSpeed;
+    rightMotorValue = stopSpeed;
+
+    leftMotor.writeMicroseconds(leftMotorValue);
+    rightMotor.writeMicroseconds(rightMotorValue);
+    return;
+  }
+
+  //**************************************************************************************************************************8
+
+  else if (Direction == 0) //Turn Left
+  {
+    leftMotorValue = minSpeed;
+    rightMotorValue = maxSpeed;
+    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+    rightMotor.writeMicroseconds(adjustedRightMotorValue);
+    delay(300);
+
+    leftMotorValue = maxSpeed;
+    rightMotorValue = maxSpeed;
+    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+    rightMotor.writeMicroseconds(adjustedRightMotorValue);
+    delay(100);
+
+    leftMotorValue = minSpeed;
+    rightMotorValue = minSpeed;
+    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+    rightMotor.writeMicroseconds(adjustedRightMotorValue);
     delay(2); //adjust if the boat is drifting forward too much
 
     leftMotorValue = stopSpeed;
