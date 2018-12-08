@@ -23,22 +23,27 @@ import time
 ##Arduino Test Code
 
 
-ser = serial.Serial('/dev/ttyACM0')
-print (ser.name)
-ser.baudrate = 115200
+ser = serial.Serial(
+    port='COM3',
+    baudrate=115200,
+    parity=serial.PARITY_ODD,
+    stopbits=serial.STOPBITS_TWO,
+    bytesize=serial.SEVENBITS
+)
 time.sleep(2)
 
 string = ''
 
 while True:
+    valueStart = 'x'
     valueA = 50
     valueB = 100
     delimiter = ','
 
 
-    string = str(valueA) + delimiter + str(valueB)
+    string =str(valueA) + delimiter + str(valueB)
     b = bytes(string, 'utf-8')
-    print(b)
+    print(b)  
     ser.write(b)
 
     valueA = 50
@@ -47,7 +52,7 @@ while True:
     time.sleep(2)   #must have a delay between sends. 
 
 
-    string = str(valueA) + delimiter + str(valueB)
+    string =delimiter + str(valueA) + delimiter + str(valueB)
     b = bytes(string, 'utf-8')
     print(b)
     ser.write(b)
@@ -57,7 +62,7 @@ while True:
     delimiter = ','
     time.sleep(2)
 
-    string = str(valueA) + delimiter + str(valueB)
+    string =str(valueA) + delimiter + str(valueB)
     b = bytes(string, 'utf-8')
     print(b)
     ser.write(b)

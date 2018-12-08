@@ -115,7 +115,7 @@ void setMotors_Sonar() {
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(250);
+    delay(400);
     
     Serial.println("Right");
     
@@ -125,7 +125,7 @@ void setMotors_Sonar() {
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(150);
+    delay(350);
     
     /* old
     leftMotorValue = minSpeed;
@@ -155,7 +155,7 @@ void setMotors_Sonar() {
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(250);
+    delay(400);
 
     Serial.println("Left");
 
@@ -165,7 +165,7 @@ void setMotors_Sonar() {
     adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
     leftMotor.writeMicroseconds(adjustedLeftMotorValue);
     rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(150);
+    delay(350);
 
     /*
     leftMotorValue = minSpeed;

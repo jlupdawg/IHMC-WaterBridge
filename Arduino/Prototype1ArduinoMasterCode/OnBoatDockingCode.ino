@@ -11,7 +11,7 @@ float currentHeading;
 /***********DOCKING****************************************************************************************/
 boolean verifiedBoat = true; //stores whether the boat has confirmed that it is the object returning sonar pulses
 //boolean dockingMode = false;
-boolean boatDocked; //stores whether or not the dock has completed docking
+boolean boatDocked = false; //stores whether or not the dock has completed docking
 
 float leftMotorDockVal;
 float rightMotorDockVal;
@@ -23,15 +23,10 @@ void DockingMechanism() {
   verifiedBoat = true;
   Serial.println("DWFEDSA");
 
-  if (verifiedBoat == false) {
-    pulseSonar();
-  }
-  else if(boatDocked == true){
-    //Do nothing
-    }
-  else if(boatDocked == false) {
+  if (boatDocked == false) {
     switch (dockingRegion) {
       case 1:
+        Serial.println("HELP");
         //Region A
         changeHeading;
         checkDist(); //Prevents us from getting too close
@@ -39,29 +34,25 @@ void DockingMechanism() {
       case 2:
         //Region B
         // Turn right
-        setMotors_dock(-10, 15); //DISCUSS AND CHANGE THESE VALUES
+        setMotors_dock(-80, 100); //DISCUSS AND CHANGE THESE VALUES
         break;
       case 3:
         //Region C
         //Turn left
-        setMotors_dock(15, -10); //DISCUSS AND CHANGE THESE VALUES
+        setMotors_dock(100, -80); //DISCUSS AND CHANGE THESE VALUES
         break;
       case 4:
         //Region D
         //Stop
-        //setMotors_dock(0, 0);
+        setMotors_dock(0, 0);
         break;
       case 5:
         //Region E
         //Go forward
-        setMotors_dock(15, 15);
+        setMotors_dock(100, 100);
       default:
         //error
         break;
     }
   }
-  else{
-    //Error
-  }
-
 }

@@ -231,9 +231,9 @@ int dockingRegion;
 void loop() {
 
   //Serial.println("loop");
-  if(dockingRegion != 4){
-    dockingMode = true;
-    }
+  //if(dockingRegion != 4){
+    //dockingMode = true;
+    //}
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     //Serial.println("PRINT 1");
@@ -241,7 +241,7 @@ void loop() {
     incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();               // ------------------------------------------------------------------check incoming serial communication
     printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
-    //Object_Location();
+    Object_Location();
     //Serial.println("PRINT 7");
     
     if (updateMotors) {
@@ -262,12 +262,12 @@ void loop() {
   else if (objectIndicated == 1 && dockingMode == false) {
     //Serial.println("PRINT 2");
     incomingRadio();
-    //Object_Location();
-    //setMotors_Sonar();
-    //cornerSonarCheck();
-    //setMotors_Sonar();
-    //cornerSonarCompare();//NEW
-    //setMotors_Sonar();//NEW
+    Object_Location();
+    setMotors_Sonar();
+    cornerSonarCheck();
+    setMotors_Sonar();
+    cornerSonarCompare();//NEW
+    setMotors_Sonar();//NEW
 
     loggingData("Sonar");
   }
@@ -275,7 +275,7 @@ void loop() {
   {
     incomingRadio();            // ----------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     setMotors_Controller();
-    //Object_Location();
+    Object_Location();
     //Serial.println("Controller Mode");
     loggingData("Controller");
   }
