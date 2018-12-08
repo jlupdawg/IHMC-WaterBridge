@@ -21,7 +21,7 @@ void changeHeading(){
     if(difference > 180){
       difference = -difference;
       }
-    incrementMotors((-difference)/1000, (difference)/1000); //increment both motors by a factor relating to the difference in heading
+    incrementMotors((-difference)/100, (difference)/100); //increment both motors by a factor relating to the difference in heading
   }
 
 void checkDist(){
