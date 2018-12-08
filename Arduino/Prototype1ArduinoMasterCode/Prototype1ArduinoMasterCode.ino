@@ -229,7 +229,7 @@ void setup() {
 int dockingRegion;
 
 void loop() {
-
+    writeLCD_Motors();//NEW
   //Serial.println("loop");
   //if(dockingRegion != 4){
     //dockingMode = true;
