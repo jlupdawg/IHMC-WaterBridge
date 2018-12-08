@@ -34,12 +34,22 @@ void DockingMechanism() {
       case 2:
         //Region B
         // Turn right
-        setMotors_dock(-80, 100); //DISCUSS AND CHANGE THESE VALUES
+        setMotors_dock(-80, 80); //DISCUSS AND CHANGE THESE VALUES
+        delay (400);
+        setMotors_dock(80, 80);
+        delay(400);
+        setMotors_dock(-80, -80);
+        delay(10);
         break;
       case 3:
         //Region C
         //Turn left
-        setMotors_dock(100, -80); //DISCUSS AND CHANGE THESE VALUES
+       setMotors_dock(80, -80); //DISCUSS AND CHANGE THESE VALUES
+        delay (400);
+        setMotors_dock(80, 80);
+        delay(400);
+        setMotors_dock(-80, -80);
+        delay(10);
         break;
       case 4:
         //Region D
@@ -49,7 +59,7 @@ void DockingMechanism() {
       case 5:
         //Region E
         //Go forward
-        setMotors_dock(100, 100);
+        dockingMode = false;
       default:
         //error
         break;

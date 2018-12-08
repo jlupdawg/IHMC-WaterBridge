@@ -231,7 +231,7 @@ int dockingRegion;
 void loop() {
 
   //Serial.println("loop");
-  if(dockingRegion != 4){
+  if(dockingRegion != 4 && dockingRegion != 5){
     dockingMode = true;
     }
 

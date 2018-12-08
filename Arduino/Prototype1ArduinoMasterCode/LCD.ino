@@ -27,18 +27,3 @@ void writeLCD(int a, int b)
   lcd.print("DataB = "); 
   lcd.print(b);
 }
-
-
-void writeLCDCounter()
-{
-  //delay(500);
-  counter++;
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Counter = "); 
-  lcd.print(counter);
-
-}
-
-
-
