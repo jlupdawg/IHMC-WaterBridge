@@ -232,26 +232,33 @@ void loop() {
 
   //Serial.println("loop");
   //if(dockingRegion != 4){
-    //dockingMode = true;
-    //}
+  //dockingMode = true;
+  //}
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     //Serial.println("PRINT 1");
-    
+
     incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();               // ------------------------------------------------------------------check incoming serial communication
-    printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
+    
+    if (newSerialData == true)
+    {
+      strcpy(tempSerialChars, receivedSerialChars);
+      printInByte();            // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
+    }
+
     Object_Location();
     //Serial.println("PRINT 7");
-    
+
     if (updateMotors) {
       setMotors_Serial();       // ------------------------------------------------------------------set the motors with pwm pin values
-      //writeLCD_Motors();
+      writeLCD_Motors();
       //writeLCD(inByte[0][1], inByte[1][1]);
     }
-    
 
-    loggingData("Normal");
+
+    //loggingData("Normal");
+    newSerialData = false;
   }
   else if (controllerModeHard == true)
   {
@@ -269,7 +276,7 @@ void loop() {
     cornerSonarCompare();//NEW
     setMotors_Sonar();//NEW
 
-    loggingData("Sonar");
+    //loggingData("Sonar");
   }
   else if (controllerMode == true)   //------------------------------------------------------------------Only perform tasks necessary to manually control the boat
   {
@@ -277,7 +284,7 @@ void loop() {
     setMotors_Controller();
     Object_Location();
     //Serial.println("Controller Mode");
-    loggingData("Controller");
+    //loggingData("Controller");
   }
 
   else if (dockingMode == true)

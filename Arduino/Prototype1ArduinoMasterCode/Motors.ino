@@ -3,8 +3,8 @@ void setMotors_Serial()                                                    //set
 {
   minSpeed = 1400;
   maxSpeed = 1600;
-  leftMotorValue = map(inByte[numberOfInputs - 2][1], -100 , 100, minSpeed, maxSpeed);    //maps a value given in percent to an analog value
-  rightMotorValue = map(inByte[numberOfInputs - 1][1], -100 , 100, minSpeed, maxSpeed);   //maps a value given in percent to an analog value
+  leftMotorValue = map(inByte[numberOfInputs - 1][1], -100 , 100, minSpeed, maxSpeed);    //maps a value given in percent to an analog value
+  rightMotorValue = map(inByte[numberOfInputs - 2][1], -100 , 100, minSpeed, maxSpeed);   //maps a value given in percent to an analog value
 
 
   leftMotorValue = constrain(leftMotorValue, minSpeed, maxSpeed);
