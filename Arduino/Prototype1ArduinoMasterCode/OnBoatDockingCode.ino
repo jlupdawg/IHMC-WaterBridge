@@ -20,6 +20,8 @@ float rightMotorDockVal;
 
 void DockingMechanism() {
   incomingRadio();
+  verifiedBoat = true;
+  Serial.println("DWFEDSA");
 
   if (verifiedBoat == false) {
     pulseSonar();
@@ -27,7 +29,7 @@ void DockingMechanism() {
   else if(boatDocked == true){
     //Do nothing
     }
-  else if(boatDocked == false && dockingRegion == '1') {
+  else if(boatDocked == false) {
     switch (dockingRegion) {
       case 1:
         //Region A
