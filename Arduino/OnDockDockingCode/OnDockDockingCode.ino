@@ -32,7 +32,7 @@ int sonarVar = 0; //switches between 0 and 1 to alternate between left and right
 float alpha;
 float beta;
 float theta;
-float dockDirection = 285; //"heading" of dock (we should do this according to IMU!)
+float dockDirection = 287; //"heading" of dock (we should do this according to IMU!)
 float desiredHeading;
 
 bool signalReceived = true;

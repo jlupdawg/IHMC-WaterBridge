@@ -20,46 +20,50 @@ float rightMotorDockVal;
 
 void DockingMechanism() {
   incomingRadio();
+  boatDocked = false;
+  verifiedBoat = true;
 
-  if (verifiedBoat == false) {
+  /*if (verifiedBoat == false) {
     pulseSonar();
-  }
-  else if(boatDocked == true){
+    }
+    else if(boatDocked == true){
     //Do nothing
     }
-  else if(boatDocked == false && dockingRegion == '1') {
-    switch (dockingRegion) {
-      case 1:
-        //Region A
-        changeHeading;
-        checkDist(); //Prevents us from getting too close
-        break;
-      case 2:
-        //Region B
-        // Turn right
-        setMotors_dock(-10, 15); //DISCUSS AND CHANGE THESE VALUES
-        break;
-      case 3:
-        //Region C
-        //Turn left
-        setMotors_dock(15, -10); //DISCUSS AND CHANGE THESE VALUES
-        break;
-      case 4:
-        //Region D
-        //Stop
-        //setMotors_dock(0, 0);
-        break;
-      case 5:
-        //Region E
-        //Go forward
-        setMotors_dock(15, 15);
-      default:
-        //error
-        break;
-    }
-  }
-  else{
-    //Error
-  }
+    else if(boatDocked == false) {*/
+  switch (dockingRegion) {
+    case 1:
+      Serial.println("HELP");
+      //Region A
+      changeHeading;
+      checkDist(); //Prevents us from getting too close
+      break;
+    case 2:
+      //Region B
+      // Turn right
+      setMotors_dock(-80, 100); //DISCUSS AND CHANGE THESE VALUES
+      break;
+    case 3:
+      //Region C
+      //Turn left
+      setMotors_dock(100, -80); //DISCUSS AND CHANGE THESE VALUES
+      break;
+    case 4:
+      //Region D
+      //Stop
+      //setMotors_dock(0, 0);
+      break;
+    case 5:
+      //Region E
+      //Go forward
+      setMotors_dock(100, 100);
+    default:
+      //error
+      break;
+      //}
+      //}
+      /*else{
+        //Error
+        }*/
 
+  }
 }
