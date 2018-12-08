@@ -173,7 +173,7 @@ void Object_Location() {
 
   else if (leftMotorValue == 1500 && rightMotorValue == 1500) { //****************************Motor Condition - No motor speed
     if (forward == 1) {
-      Serial.println("Habala badingdong");
+      Serial.println("Habala badingdong dingding dang");
       backwards = 0;
       forward = 0;
       notMoving = 1;
@@ -199,7 +199,7 @@ void Object_Location() {
       //f1 = SonarSensor_Front_Back(pinB_4, pinF_2); OLD
 
       frontBackCompare(); //NEW*************
-      
+
       //objectDetection(); OLD
       return;
     }
@@ -231,37 +231,79 @@ void Object_Location() {
 /****************************************************************NEW BELOW********************************************************************/
 void frontBackCompare() {
   f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
-  delayMicroseconds(10);
+  delayMicroseconds(12);
   b1  = SonarSensor_Front_Back(pinB_4, pinB_2);
-  if(f1 < b1){
+  if (f1 < b1) {
     backwards = 1;
     objectDetection();
-    }
-  if(b1 < f1){
+  }
+  if (b1 < f1) {
     forward = 1;
     objectDetection();
-    }
+  }
 }
 
-void cornerSonarCompare(){
-  if(s1 < s4){
-    backwards = 1;
-    Direction = 1; 
-    }
-  if(s4 < s1){
-    forward = 1;
-    Direction = 1;
-    }
-  if(s2 < s3){
-    backwards = 1;
-    Direction = 0;
-    }
-  if(s3 < s2){
-    forward = 1;
-    Direction = 0;
-    }
+void cornerSonarCompare() {
   
+  //NEW BELOW 12/7/18 7:00PM
+  s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
+  delayMicroseconds(5);
+  s2 = SonarSensor_Corner(trigPin_2, echoPin_2);
+  delayMicroseconds(5);
+  s3 = SonarSensor_Corner(trigPin_3, echoPin_3);
+  delayMicroseconds(5);
+  s4 = SonarSensor_Corner(trigPin_4, echoPin_4);
+  delayMicroseconds(5);
+  f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+  delayMicroseconds(12);
+  b1  = SonarSensor_Front_Back(pinB_4, pinB_2);
+  //NEW ABOVE 12/7/18 7:00PM
+  if ((s1 < watchCircleRadius) || (s4 < watchCircleRadius)) {
+    if (s1 < s4) {
+      backwards = 1;
+      Direction = 1;
+    }
+    if (s4 < s1) {
+      forward = 1;
+      Direction = 1;
+    }
   }
+  else if ((s2 < watchCircleRadius) || (s3 < watchCircleRadius)) {
+    if (s2 < s3) {
+      backwards = 1;
+      Direction = 0;
+    }
+    if (s3 < s2) {
+      forward = 1;
+      Direction = 0;
+    }
+  }
+  else {
+    return;
+  }
+  //NEW BELOW 12/7/18 7:10PM
+  if ((s1 < watchCircleRadius) && (s4 < watchCircleRadius) && (f1 < watchCircleRadius)) {
+    Direction = 0;
+    backwards = 1;
+  }
+  else if ((s2 < watchCircleRadius) && (s3 < watchCircleRadius) && (f1 < watchCircleRadius)) {
+    Direction = 1;
+    backwards = 1;
+  }
+  else if ((s1 < watchCircleRadius) && (s4 < watchCircleRadius) && (b1 < watchCircleRadius)) {
+    Direction = 0;//0 is left motor minimum right motor max, 1 is left max, right min
+    forward = 1;
+  }
+  else if ((s2 < watchCircleRadius) && (s3 < watchCircleRadius) && (b1 < watchCircleRadius)) {
+    Direction = 1;
+    forward = 1;
+  }
+  else {
+    return;
+  }
+  //NEW ABOVE 12/7/18 7:10PM
+  
+}
 /****************************************************************NEW ABOVE********************************************************************/
 
 void megaBroke() {
