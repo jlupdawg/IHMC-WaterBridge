@@ -285,18 +285,26 @@ void cornerSonarCompare() {
   if ((s1 < watchCircleRadius) && (s4 < watchCircleRadius) && (f1 < watchCircleRadius)) {
     Direction = 0;
     backwards = 1;
+    forward = 0;
+    notMoving = 0;
   }
   else if ((s2 < watchCircleRadius) && (s3 < watchCircleRadius) && (f1 < watchCircleRadius)) {
     Direction = 1;
     backwards = 1;
+    forward = 0;
+    notMoving = 0;
   }
   else if ((s1 < watchCircleRadius) && (s4 < watchCircleRadius) && (b1 < watchCircleRadius)) {
     Direction = 0;//0 is left motor minimum right motor max, 1 is left max, right min
     forward = 1;
+    backwards = 0;
+    notMoving = 0;
   }
   else if ((s2 < watchCircleRadius) && (s3 < watchCircleRadius) && (b1 < watchCircleRadius)) {
     Direction = 1;
     forward = 1;
+    notMoving = 0;
+    backwards = 0;
   }
   else {
     return;

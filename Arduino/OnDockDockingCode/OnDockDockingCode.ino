@@ -34,6 +34,7 @@ float beta;
 float theta;
 float dockDirection = 287; //"heading" of dock (we should do this according to IMU!)
 float desiredHeading;
+float dockDist = 30;
 
 bool signalReceived = true;
 bool boatConfirmed = true; //We absolutely do not need this for the pool
