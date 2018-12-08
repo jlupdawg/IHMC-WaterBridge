@@ -27,7 +27,3 @@ void writeLCD(int a, int b)
   lcd.print("DataB = "); 
   lcd.print(b);
 }
-
-
-
-

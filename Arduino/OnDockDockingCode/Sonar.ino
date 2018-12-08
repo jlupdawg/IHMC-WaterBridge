@@ -75,11 +75,11 @@ void findRegion(){
     Serial.println("C");
     }
   else if(distanceS1 >= detectDist && distanceS2 >= detectDist){
-    //Zone D
+    //Zone E
     regionVariable=4;
     Serial.println("D");
     }
-  else{
+  else if(distanceS1 <= dockDist || distanceS2 <= dockDist){
     //Zone D
     regionVariable=5;
     Serial.println("E");
