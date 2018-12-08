@@ -65,11 +65,12 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 /************************************************************************************************/
 
 /************************************ Serial Communication **************************************/
-char inputString[50];            // ------------------------------------------------------------------a string to hold incoming data
-boolean stringComplete = false;  // ------------------------------------------------------------------whether the string is complete
+const byte serialChars = 100;
+char receivedSerialChars[numChars];
+char tempSerialChars[numChars];        // temporary array for use when parsing
 const int numberOfInputs = 3;    // ------------------------------------------------------------------number of inputs through serial communication seperated by comma {status, leftMotor %, rightMotor %}
 int inByte[numberOfInputs][2];   // ------------------------------------------------------------------decoded serial communication 2D array for comparison of previous values
-char *inputs[numberOfInputs];    // ------------------------------------------------------------------raw serial communication
+bool newSerialData = false;
 /************************************************************************************************/
 
 /************************************ Manual Controller *****************************************/
