@@ -10,14 +10,14 @@ void cornerSonarCheck() {
     s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
     s2 = SonarSensor_Corner(trigPin_2, echoPin_2);
 
-    if (s2 < watchCircleRadius) { //calculated for the minimum distance so the boat can turn and not hit the object when turning
+    if (s2 < watchCircleRadiusCorner) { //calculated for the minimum distance so the boat can turn and not hit the object when turning
       if (s2 < s1) { //object is to the right side relative to front sensor
         Direction = 0;
         return;
       }
       return;
     }
-    else if (s1 < watchCircleRadius) {
+    else if (s1 < watchCircleRadiusCorner) {
       if (s1 < s2) { //object is to the left side relative to front sensor
         Direction = 1;
         return;
@@ -35,13 +35,13 @@ void cornerSonarCheck() {
     s3 = SonarSensor_Corner(trigPin_1, echoPin_1);
     s4 = SonarSensor_Corner(trigPin_2, echoPin_2);
 
-    if (s4 < watchCircleRadius) {
+    if (s4 < watchCircleRadiusCorner) {
       if (s4 < s3) {//obj left relative to front
         Direction = 0;
         return;
       }
     }
-    else if (s3 < watchCircleRadius) {
+    else if (s3 < watchCircleRadiusCorner) {
       if (s3 < s4) {
         Direction = 1; //Direction equals zero because the boat is moving in reverse so the motors need to go the opposite direction.
         return;
@@ -66,7 +66,7 @@ void cornerSonarCheck() {
     s1 = SonarSensor_Corner(trigPin_1, echoPin_1);
     s2 = SonarSensor_Corner(trigPin_2, echoPin_2);
 
-    if (s2 < watchCircleRadius) { //calculated for the minimum distance so the boat can turn and not hit the object when turning
+    if (s2 < watchCircleRadiusCorner) { //calculated for the minimum distance so the boat can turn and not hit the object when turning
       objectIndicated = 1;
       if (s2 < s1) { //object is to the right side relative to front sensor
         Direction = 0;
@@ -74,7 +74,7 @@ void cornerSonarCheck() {
       }
       return;
     }
-    else if (s1 < watchCircleRadius) {
+    else if (s1 < watchCircleRadiusCorner) {
       objectIndicated = 1;
       if (s1 < s2) { //object is to the left side relative to front sensor
         Direction = 1;
@@ -258,7 +258,7 @@ void cornerSonarCompare() {
   delayMicroseconds(12);
   b1  = SonarSensor_Front_Back(pinB_4, pinB_2);
   //NEW ABOVE 12/7/18 7:00PM
-  if ((s1 < watchCircleRadius) || (s4 < watchCircleRadius)) {
+  if ((s1 < watchCircleRadiusCorner) || (s4 < watchCircleRadiusCorner)) {
     if (s1 < s4) {
       backwards = 1;
       Direction = 1;
@@ -268,7 +268,7 @@ void cornerSonarCompare() {
       Direction = 1;
     }
   }
-  else if ((s2 < watchCircleRadius) || (s3 < watchCircleRadius)) {
+  else if ((s2 < watchCircleRadiusCorner) || (s3 < watchCircleRadiusCorner)) {
     if (s2 < s3) {
       backwards = 1;
       Direction = 0;
@@ -282,25 +282,25 @@ void cornerSonarCompare() {
     return;
   }
   //NEW BELOW 12/7/18 7:10PM
-  if ((s1 < watchCircleRadius) && (s4 < watchCircleRadius) && (f1 < watchCircleRadius)) {
+  if ((s1 < watchCircleRadiusCorner) && (s4 < watchCircleRadiusCorner) && (f1 < watchCircleRadius)) {
     Direction = 0;
     backwards = 1;
     forward = 0;
     notMoving = 0;
   }
-  else if ((s2 < watchCircleRadius) && (s3 < watchCircleRadius) && (f1 < watchCircleRadius)) {
+  else if ((s2 < watchCircleRadiusCorner) && (s3 < watchCircleRadiusCorner) && (f1 < watchCircleRadius)) {
     Direction = 1;
     backwards = 1;
     forward = 0;
     notMoving = 0;
   }
-  else if ((s1 < watchCircleRadius) && (s4 < watchCircleRadius) && (b1 < watchCircleRadius)) {
+  else if ((s1 < watchCircleRadiusCorner) && (s4 < watchCircleRadiusCorner) && (b1 < watchCircleRadius)) {
     Direction = 0;//0 is left motor minimum right motor max, 1 is left max, right min
     forward = 1;
     backwards = 0;
     notMoving = 0;
   }
-  else if ((s2 < watchCircleRadius) && (s3 < watchCircleRadius) && (b1 < watchCircleRadius)) {
+  else if ((s2 < watchCircleRadiusCorner) && (s3 < watchCircleRadiusCorner) && (b1 < watchCircleRadius)) {
     Direction = 1;
     forward = 1;
     notMoving = 0;

@@ -102,7 +102,8 @@ bool controllerModeHard = false;
 double duration_corner, duration_front_back; //------------------------------------------------------------------variable for microsecond values recorded from sonar values
 double distance_corner, distance_front_back = 3000, s1, s2, s3, s4;//--------------------------------------------distance storage variables
 double f1 = 3000, b1 = 3000; //----------------------------------------------------------------------------------out of range values, sonar will never read this high
-double watchCircleRadius = 150; //106.5-----------------------------------------------------------------------------radius of circle "around" the boat, used for minimum allowable distance of objects to the center of the boat
+double watchCircleRadius = 100; //106.5-----------------------------------------------------------------------------radius of circle "around" the boat, used for minimum allowable distance of objects to the center of the boat
+double watchCircleRadiusCorner = 80;
 double CalibrationFactor = 58.3; //------------------------------------------------------------------------------units: microsec/cm, initialize as 58.3(STP factor) when thermisor not set up
 int objectIndicated = 0, forward = 0, backwards = 0, notMoving = 3; //-----------------------------------------------------------state indicator variables
 int Direction = 3; //--------------------------------------------------------------------------------------------Left(1), Right(0), Center(2): relative to the front sonar sensor(front of boat), 3 is never a valid direction indicator
@@ -120,7 +121,7 @@ int dockingArray[4] = {
 int dockingStatus = 0;
 
 /************************************************************************************************/
-/***************************************** Logging **********************************************/
+/***************************************** //logging **********************************************/
 
 unsigned long currentMillis = millis();
 unsigned long previousMillis = 0;
@@ -230,10 +231,11 @@ void setup() {
 int dockingRegion;
 
 void loop() {
+  dockingMode = false;
     writeLCD_Motors();//NEW
   //Serial.println("loop");
   if(dockingRegion != 4 && dockingRegion != 5){
-    dockingMode = true;
+    //dockingMode = true;
     }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
@@ -252,13 +254,13 @@ void loop() {
     }
     
 
-    loggingData("Normal");
+    ////loggingData("Normal");
   }
   else if (controllerModeHard == true)
   {
     incomingRadio();
     setMotors_Controller();
-    loggingData("Controller Mode Hard");
+    //loggingData("Controller Mode Hard");
   }
   else if (objectIndicated == 1 && dockingMode == false) {
     //Serial.println("PRINT 2");
@@ -270,7 +272,7 @@ void loop() {
     cornerSonarCompare();//NEW
     setMotors_Sonar();//NEW
 
-    loggingData("Sonar");
+    //loggingData("Sonar");
   }
   else if (controllerMode == true)   //------------------------------------------------------------------Only perform tasks necessary to manually control the boat
   {
@@ -278,7 +280,7 @@ void loop() {
     setMotors_Controller();
     Object_Location();
     //Serial.println("Controller Mode");
-    loggingData("Controller");
+    //loggingData("Controller");
   }
 
   else if (dockingMode == true)
@@ -287,7 +289,7 @@ void loop() {
       readSerial();
       dock();
       setMotors_dock();
-      loggingData("Docking Mode");*/
+      //loggingData("Docking Mode");*/
     DockingMechanism();
 
   }
