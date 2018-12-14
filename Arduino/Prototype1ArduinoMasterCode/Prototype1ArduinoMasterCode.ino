@@ -228,41 +228,33 @@ void setup() {
   pinMode(pinB_4, OUTPUT); //--------------------------------------------------------------------------------uses pin 2 for triggeringboth front and back sonar sensor.
 }
 
-int dockingRegion;
+int dockingRegion = 5;
 
 void loop() {
   dockingMode = false;
-    //writeLCD_Motors();//NEW
+    writeLCD_Motors();//NEW
   //Serial.println("loop");
   if(dockingRegion != 4 && dockingRegion != 5){
     //dockingMode = true;
     }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
-incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
-    readSerial();               // ------------------------------------------------------------------check incoming serial communication
-
+    //Serial.println("PRINT 1");
     
-    if(newSerialData == true)
-    {
-      strcpy(tempSerialChars, receivedSerialChars);
-      printInByte();            // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
-    }             
-    //Object_Location();
-
-    //Object_Location();
-
+    incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
+    readSerial();               // ------------------------------------------------------------------check incoming serial communication
+    printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
+    Object_Location();
     //Serial.println("PRINT 7");
     
     if (updateMotors) {
       setMotors_Serial();       // ------------------------------------------------------------------set the motors with pwm pin values
-      writeLCD_Motors();
-      //writeLCD(inByte[1][1], inByte[2][1]);
+      //writeLCD_Motors();
+      //writeLCD(inByte[0][1], inByte[1][1]);
     }
     
 
-    //loggingData("Normal");
-    newSerialData = false;
+    ////loggingData("Normal");
   }
   else if (controllerModeHard == true)
   {

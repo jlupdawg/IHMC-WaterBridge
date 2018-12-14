@@ -69,4 +69,6 @@ void mag_Map() {
   else if (average_MAG_Heading <= 360) {
     average_MAG_Heading = map(average_MAG_Heading, 339, 360, 67.5, 90);
   }
+
+  average_MAG_Heading = map(average_MAG_Heading, 0, 360, 360, 0);
 }
