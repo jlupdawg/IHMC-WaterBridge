@@ -241,6 +241,9 @@ void loop() {
   if (dockingRegion != 4 && dockingRegion != 5) {
     dockingMode = true;
   }
+  else{
+    dockingMode = false;
+    }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
     //Serial.println("PRINT 1");
