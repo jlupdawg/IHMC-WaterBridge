@@ -235,11 +235,13 @@ void frontBackCompare() {
   b1  = SonarSensor_Front_Back(pinB_4, pinB_2);
   if (f1 < b1) {
     backwards = 1;
-    objectDetection();
+    //objectDetection();
+    cornerSonarCompare();
   }
   if (b1 < f1) {
     forward = 1;
-    objectDetection();
+    //objectDetection();
+    cornerSonarCompare();
   }
 }
 
@@ -253,10 +255,14 @@ void cornerSonarCompare() {
   s3 = SonarSensor_Corner(trigPin_3, echoPin_3);
   delayMicroseconds(5);
   s4 = SonarSensor_Corner(trigPin_4, echoPin_4);
+  
+  /* Commented out 10:17am 12/14/18
   delayMicroseconds(5);
   f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
   delayMicroseconds(12);
   b1  = SonarSensor_Front_Back(pinB_4, pinB_2);
+  */
+  
   //NEW ABOVE 12/7/18 7:00PM
   if ((s1 < watchCircleRadiusCorner) || (s4 < watchCircleRadiusCorner)) {
     if (s1 < s4) {

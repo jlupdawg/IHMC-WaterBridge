@@ -287,9 +287,9 @@ void loop() {
     incomingRadio();
     Object_Location();
     setMotors_Sonar();
-    cornerSonarCheck();
-    setMotors_Sonar();
-    cornerSonarCompare();//NEW
+    //cornerSonarCheck();
+    //cornerSonarCompare();//NEW
+    frontBackCompare();
     setMotors_Sonar();//NEW
 
     //loggingData("Sonar");

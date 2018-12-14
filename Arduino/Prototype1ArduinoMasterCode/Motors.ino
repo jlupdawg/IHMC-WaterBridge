@@ -106,36 +106,39 @@ void setMotors_Sonar() {
 
   int adjustedLeftMotorValue = 1500;
   int adjustedRightMotorValue = 1500;
+  f1 = SonarSensor_Front_Back(pinB_4, pinF_2);
+  delayMicroseconds(12);
+  b1  = SonarSensor_Front_Back(pinB_4, pinB_2);
 
   if (Direction == 1 || Direction == 2) { //Turn Right
 
-    leftMotorValue = maxSpeed;
-    rightMotorValue = minSpeed;
-    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
-    rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(400);
-    
-    Serial.println("Right");
-    
-    leftMotorValue = maxSpeed;
-    rightMotorValue = maxSpeed;
-    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
-    rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(350);
-    
-    /* old
-    leftMotorValue = minSpeed;
-    rightMotorValue = minSpeed;
-    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
-    rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    //delay(2); //adjust if the boat is drifting forward too much, or backwards too much
-    */
+    if (f1 < watchCircleRadius && b1 > watchCircleRadius) {
+      leftMotorValue = minSpeed;
+      rightMotorValue = minSpeed;
+      adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+      rightMotor.writeMicroseconds(adjustedRightMotorValue);
+      delay(500);
+    }
+    if (b1 < watchCircleRadius && f1 > watchCircleRadius) {
+      leftMotorValue = maxSpeed;
+      rightMotorValue = maxSpeed;
+      adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+      rightMotor.writeMicroseconds(adjustedRightMotorValue);
+      delay(500);
+    }
+    if (b1 < watchCircleRadius && f1 < watchCircleRadius) {
+      leftMotorValue = maxSpeed;
+      rightMotorValue = minSpeed;
+      adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+      rightMotor.writeMicroseconds(adjustedRightMotorValue);
+      delay(375);
+    }
 
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
@@ -149,33 +152,34 @@ void setMotors_Sonar() {
 
   else if (Direction == 0) //Turn Left
   {
-    leftMotorValue = minSpeed;
-    rightMotorValue = maxSpeed;
-    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
-    rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(400);
 
-    Serial.println("Left");
-
-    leftMotorValue = maxSpeed;
-    rightMotorValue = maxSpeed;
-    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
-    rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    delay(350);
-
-    /*
-    leftMotorValue = minSpeed;
-    rightMotorValue = minSpeed;
-    adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
-    leftMotor.writeMicroseconds(adjustedLeftMotorValue);
-    rightMotor.writeMicroseconds(adjustedRightMotorValue);
-    //delay(2); //adjust if the boat is drifting forward too much
-    */
+    if (f1 < watchCircleRadius && b1 > watchCircleRadius) {
+      leftMotorValue = minSpeed;
+      rightMotorValue = minSpeed;
+      adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+      rightMotor.writeMicroseconds(adjustedRightMotorValue);
+      delay(500);
+    }
+    if (b1 < watchCircleRadius && f1 > watchCircleRadius) {
+      leftMotorValue = maxSpeed;
+      rightMotorValue = maxSpeed;
+      adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+      rightMotor.writeMicroseconds(adjustedRightMotorValue);
+      delay(500);
+    }
+    if (b1 < watchCircleRadius && f1 < watchCircleRadius) {
+      leftMotorValue = minSpeed;
+      rightMotorValue = maxSpeed;
+      adjustedLeftMotorValue = map(leftMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      adjustedRightMotorValue = map(rightMotorValue, minSpeed, maxSpeed, maxSpeed, minSpeed);
+      leftMotor.writeMicroseconds(adjustedLeftMotorValue);
+      rightMotor.writeMicroseconds(adjustedRightMotorValue);
+      delay(375);
+    }
 
     leftMotorValue = stopSpeed;
     rightMotorValue = stopSpeed;
@@ -183,7 +187,7 @@ void setMotors_Sonar() {
     rightMotor.writeMicroseconds(rightMotorValue);
 
     Serial.println("Stop");
-    
+
     return;
   }
 }
