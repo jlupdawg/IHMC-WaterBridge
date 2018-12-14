@@ -230,15 +230,16 @@ void setup() {
 
 int dockingRegion = 5;
 
+
+
 void loop() {
   dockingMode = false;
   
     writeLCD_Motors();//NEW
-=======
   //writeLCD_Motors();//NEW
   //Serial.println("loop");
   if (dockingRegion != 4 && dockingRegion != 5) {
-    //dockingMode = true;
+    dockingMode = true;
   }
 
   if ((controllerMode == false) && (dockingMode == false) && (objectIndicated == 0)) { //-------------must reset the master board after putting the boat in controllerMode. This is intentional
@@ -248,7 +249,6 @@ void loop() {
     readSerial();               // ------------------------------------------------------------------check incoming serial communication
     printInByte();              // ------------------------------------------------------------------printInbyte and decide on whether or not the motors should be updated and prints the value
     Object_Location();
-=======
     incomingRadio();            // ------------------------------------------------------------------reads incoming radio and sends it to the motors. This may need to be changed to "Incoming Radio" for future use
     readSerial();               // ------------------------------------------------------------------check incoming serial communication
 
@@ -262,7 +262,6 @@ void loop() {
 
     //Object_Location();
 
->>>>>>> 6aa239c61f3fbd7055291f85ebc4b4ec6f57daf2
     //Serial.println("PRINT 7");
 
     if (updateMotors) {
